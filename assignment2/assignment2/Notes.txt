@@ -22,7 +22,7 @@ values:
 
 mapTile tile type - int that refers to position in sprite sheet. multiply by the size of each tile IN THE SHEET
 Currently the selected tile is indicated by a bool - this will need to be turned to false
-by checking every tile in the map whena  new tile is clicked - inneficient?
+by checking every tile in the map whena  new tile is clicked - inneficient 
 
 
 Tile Types:
@@ -48,6 +48,8 @@ Move range tiles in green? or blue?
 
 
 TODO:
-	implement input hadling - SDL_QUIT
-	make proper game loop
-	make tiles clickable - need new sprite for higlighted tile
+	DONE implement input hadling - SDL_QUIT
+	DONE make proper game loop
+	DONE make tiles clickable - need new sprite for higlighted tile
+	Begin to consider framework - move input handling to a seperate class
+	Implement withinRange / A*

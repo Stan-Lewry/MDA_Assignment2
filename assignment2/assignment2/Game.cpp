@@ -7,20 +7,35 @@
 
 #define screenW 640
 #define screenH 480
-#define mapW 10
-#define mapH 10
+//#define mapW 10
+//#define mapH 10
+
+const int mapW = 15;
+const int mapH = 15;
+const int mapSize = mapW * mapH;
+
+bool globalRunning;
 
 SDL_Window* window = NULL;
 SDL_Renderer* rend = NULL;
 
 SDL_Texture* mapTileTexture = NULL;
 
+SDL_Event evnt;
 
 struct mapTile{
-	int type;
+	int screenX;
+	int screenY;
+	int typeX;
+	int typeY;
 	bool blocked;
+	bool selected;
+	bool moveRange;
+	bool attackRange;
 };
 
+
+int tileSize = 32;
 mapTile map[mapW][mapH];
 
 void init(){
@@ -35,6 +50,7 @@ void init(){
 			printf("Renderer Initialized\n");
 		}
 	}
+	globalRunning = true;
 }
 
 SDL_Texture* loadPNG(char path[]){
@@ -51,16 +67,77 @@ void initTextures(){
 }
 
 void initMap(){
-	for (int i = 0; i < mapW; i++){
-		for (int j = 0; j < mapH; j++){
-			mapTile newTile = { 0, false };
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			mapTile newTile;
+			newTile.screenX = j * tileSize;
+			newTile.screenY = i * tileSize;
+			newTile.typeX = 0;
+			newTile.typeY = 0;
+			newTile.blocked = false;
+			newTile.selected = false;
+			newTile.moveRange = false;
+			newTile.attackRange = false;
 			map[i][j] = newTile;
 		}
 	}
 }
 
+void checkClick(int clickX, int clickY){
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			map[i][j].selected = false;
+			if (clickX > map[i][j].screenX && clickX < map[i][j].screenX + tileSize){
+				if (clickY > map[i][j].screenY && clickY < map[i][j].screenY + tileSize){
+					map[i][j].selected = true;
+				}
+			}
+		}
+	}
+}
+
+void handleEvents(){
+	while (SDL_PollEvent(&evnt)){
+		switch(evnt.type){
+		case SDL_QUIT:
+			globalRunning = false;
+			break;
+		case SDL_MOUSEBUTTONDOWN:
+			int x, y;
+			SDL_GetMouseState(&x, &y);
+			checkClick(x, y);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+
 void renderMap(){
-	
+
+	SDL_RenderClear(rend);
+
+	SDL_Rect sRect = { 0, 0, 32, 32 };
+	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			dRect.x = map[i][j].screenX;
+			dRect.y = map[i][j].screenY;
+
+			sRect.x = map[i][j].typeX;
+			sRect.y = map[i][j].typeY;
+
+			SDL_RenderCopy(rend, mapTileTexture, &sRect, &dRect);
+
+			if (map[i][j].selected == true){
+				sRect.y = 9 * 32;
+				SDL_RenderCopy(rend, mapTileTexture, &sRect, &dRect);
+			}
+		}
+	}
+
+	SDL_RenderPresent(rend);
 }
 
 int main(int argv, char* argc[]){
@@ -69,9 +146,11 @@ int main(int argv, char* argc[]){
 	initMap();
 	initTextures();
 
-	SDL_Delay(5000);
 
-	
+	while (globalRunning){
+		handleEvents();
+		renderMap();
+	}
 
 	return 0;
 }
