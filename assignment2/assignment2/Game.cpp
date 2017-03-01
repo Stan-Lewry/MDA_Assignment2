@@ -1,72 +1,15 @@
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
-#include <vector>
-#include <string>
-#include <iostream>
+#include "Game.h"
 
-#define screenW 640
-#define screenH 480
-//#define mapW 10
-//#define mapH 10
-
-const int mapW = 15;
-const int mapH = 15;
-const int mapSize = mapW * mapH;
-
-bool globalRunning;
-
-SDL_Window* window = NULL;
-SDL_Renderer* rend = NULL;
-
-SDL_Texture* mapTileTexture = NULL;
-
-SDL_Event evnt;
-
-struct mapTile{
-	int screenX;
-	int screenY;
-	int typeX;
-	int typeY;
-	bool blocked;
-	bool selected;
-	bool moveRange;
-	bool attackRange;
-};
-
-
-int tileSize = 32;
-mapTile map[mapW][mapH];
-
-void init(){
-	SDL_Init(SDL_INIT_EVERYTHING);
-	TTF_Init();
-	IMG_Init(IMG_INIT_PNG);
-	window = SDL_CreateWindow("Assignment 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenW, screenH, SDL_WINDOW_SHOWN);
-	if (window != NULL){
-		printf("Window Initialized\n");
-		rend = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
-		if (rend != NULL){
-			printf("Renderer Initialized\n");
-		}
-	}
-	globalRunning = true;
+Game::Game(){
+	sdlUtils = new SDLUtils();
+	globalRunning = sdlUtils->initSDL();
 }
 
-SDL_Texture* loadPNG(char path[]){
-	printf("loading: %s\n", path);
-	SDL_Surface* tempSurface = IMG_Load(path);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tempSurface);
-	SDL_FreeSurface(tempSurface);
-	printf("Done!\n");
-	return texture;
+void Game::initTextures(){
+	mapTileTexture = sdlUtils->loadPNG("Assets/tiles01.png");
 }
 
-void initTextures(){
-	mapTileTexture = loadPNG("Assets/tiles01.png");
-}
-
-void initMap(){
+void Game::initMap(){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			mapTile newTile;
@@ -83,7 +26,7 @@ void initMap(){
 	}
 }
 
-void checkClick(int clickX, int clickY){
+void Game::checkClick(int clickX, int clickY){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			map[i][j].selected = false;
@@ -96,9 +39,9 @@ void checkClick(int clickX, int clickY){
 	}
 }
 
-void handleEvents(){
+void Game::handleEvents(){
 	while (SDL_PollEvent(&evnt)){
-		switch(evnt.type){
+		switch (evnt.type){
 		case SDL_QUIT:
 			globalRunning = false;
 			break;
@@ -113,10 +56,8 @@ void handleEvents(){
 	}
 }
 
-
-void renderMap(){
-
-	SDL_RenderClear(rend);
+void Game::renderMap(){
+	SDL_RenderClear(sdlUtils->rend);
 
 	SDL_Rect sRect = { 0, 0, 32, 32 };
 	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
@@ -128,29 +69,21 @@ void renderMap(){
 			sRect.x = map[i][j].typeX;
 			sRect.y = map[i][j].typeY;
 
-			SDL_RenderCopy(rend, mapTileTexture, &sRect, &dRect);
+			SDL_RenderCopy(sdlUtils->rend, mapTileTexture, &sRect, &dRect);
 
 			if (map[i][j].selected == true){
 				sRect.y = 9 * 32;
-				SDL_RenderCopy(rend, mapTileTexture, &sRect, &dRect);
+				SDL_RenderCopy(sdlUtils->rend, mapTileTexture, &sRect, &dRect);
 			}
 		}
 	}
 
-	SDL_RenderPresent(rend);
+	SDL_RenderPresent(sdlUtils->rend);
 }
 
-int main(int argv, char* argc[]){
-
-	init();
-	initMap();
-	initTextures();
-
-
+void Game::gameLoop(){
 	while (globalRunning){
 		handleEvents();
 		renderMap();
 	}
-
-	return 0;
 }
