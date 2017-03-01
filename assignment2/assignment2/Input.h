@@ -4,7 +4,7 @@
 #include "SDLUtils.h"
 
 struct InputState{
-	bool leftMouse;
+	bool mouseButtonDown;
 	int mouseX;
 	int mouseY;
 	bool quit;
@@ -18,7 +18,7 @@ public:
 	InputState getCurrentInputState();
 
 private:
-	SDL_Event* evnt;
+	SDL_Event evnt;
 	InputState inputState;
 
 };

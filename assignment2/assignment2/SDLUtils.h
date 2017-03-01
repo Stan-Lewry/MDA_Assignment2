@@ -15,6 +15,7 @@ const int mapW = 15;
 const int mapH = 15;
 const int mapSize = mapW * mapH;
 
+
 //bool globalRunning = true;
 
 class SDLUtils{

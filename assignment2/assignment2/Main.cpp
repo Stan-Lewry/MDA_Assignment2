@@ -13,6 +13,7 @@ int main(int argv, char* argc[]){
 
 
 	game->initMap();
+	//game->buildMapFromTypes();
 	game->initTextures();
 
 	game->gameLoop();

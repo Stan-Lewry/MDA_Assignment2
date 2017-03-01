@@ -2,10 +2,13 @@
 #define GAME_HEADER
 
 #include "SDLUtils.h"
+#include "Input.h"
 
 struct mapTile{
 	int screenX;
 	int screenY;
+	int worldX;
+	int worldY;
 	int typeX;
 	int typeY;
 	bool blocked;
@@ -18,16 +21,26 @@ class Game{
 public:
 	Game();
 
-	//SDL_Texture* loadPNG(SDL_Renderer* rend, char path[]);	//implemented
-	void initTextures();					//implemented
+	
+	void initTextures();					
 
-	void initMap();											//implemented
+	void initMap();											
 
-	void checkClick(int clickX, int clickY);				//implemented
+	void buildMapFromTypes();
 
-	void handleEvents();									//implemented
+	void checkClick(int clickX, int clickY);				
 
-	void renderMap();						//implemented
+	void clearSelection();
+
+	void checkMovementRange(int moveDist, int originX, int originY);
+
+	bool isTraversable(int x, int y);
+
+	void handleEvents();									
+
+	void renderMap();						
+
+	void update(InputState inputState);
 
 	void gameLoop();
 private:
@@ -36,12 +49,15 @@ private:
 	//const int mapSize = mapW * mapH;
 	
 	SDLUtils* sdlUtils;
-	
+	Input* input;
+
 	bool globalRunning;
 	SDL_Texture* mapTileTexture = NULL;
+	int spriteSize = 32;
 	SDL_Event evnt;
 	int tileSize = 32;
 	mapTile map[mapW][mapH];
+	int mapTypes[15][15];
 	
 };
 
