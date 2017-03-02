@@ -12,7 +12,8 @@ int main(int argv, char* argc[]){
 	game = new Game();
 
 
-	game->initMap();
+	//game->initMap();
+	
 	//game->buildMapFromTypes();
 	game->initTextures();
 

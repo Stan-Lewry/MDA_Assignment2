@@ -14,8 +14,8 @@
 const int mapW = 15;
 const int mapH = 15;
 const int mapSize = mapW * mapH;
-
-
+//int spriteSize = 32;
+//int tileSize = 32;
 //bool globalRunning = true;
 
 class SDLUtils{
