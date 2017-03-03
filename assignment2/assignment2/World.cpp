@@ -67,7 +67,7 @@ void World::initMap(){
 	}
 
 	mapTile path1;
-	path1.typeX = 2 * tileSize;
+	path1.typeX = 2 * spriteSize;
 	path1.typeY = 0;
 	path1.blocked = false;
 	path1.selected = false;
@@ -334,7 +334,7 @@ void World::initMap(){
 	tree.moveRange = false;
 	tree.attackRange = false;
 
-	tree.screenX = 1 * spriteSize;
+	tree.screenX = 1 * tileSize;
 	tree.screenY = 6 * tileSize;
 	tree.worldX = 1;
 	tree.worldY = 6;
@@ -342,7 +342,7 @@ void World::initMap(){
 
 	mapTile grave;
 	grave.typeX = 0;
-	grave.typeY = 1 * tileSize;
+	grave.typeY = 1 * spriteSize;
 	grave.blocked = true;
 	grave.selected = false;
 	grave.moveRange = false;
@@ -418,7 +418,46 @@ void World::checkMovementRange(int moveDist, int originX, int originY){
 }
 
 void World::checkAttackRange(int attackDist, int originX, int originY){
+	std::vector<mapTile> listA;
+	std::vector<mapTile> listB;
 
+	listA.push_back(map[originY][originX]);
+
+	std::cout << "origin: " << originX << ", " << originY << std::endl;
+
+	for (int i = 0; i < attackDist; i++){
+		for (int j = 0; j < listA.size(); j++){
+
+			int currentX = listA.at(j).worldX;
+			int currentY = listA.at(j).worldY;
+
+			if (isTraversable(currentX, currentY + 1)){
+				mapTile southAdj = map[currentY + 1][currentX];
+				listB.push_back(southAdj);
+				map[southAdj.worldY][southAdj.worldX].attackRange = true;
+			}
+
+			if (isTraversable(currentX + 1, currentY)){
+				mapTile eastAdj = map[currentY][currentX + 1];
+				listB.push_back(eastAdj);
+				map[eastAdj.worldY][eastAdj.worldX].attackRange = true;
+			}
+
+			if (isTraversable(currentX, currentY - 1)){
+				mapTile northAdj = map[currentY - 1][currentX];
+				listB.push_back(northAdj);
+				map[northAdj.worldY][northAdj.worldX].attackRange = true;
+			}
+
+			if (isTraversable(currentX - 1, currentY)){
+				mapTile westAdj = map[currentY][currentX - 1];
+				listB.push_back(westAdj);
+				map[westAdj.worldY][westAdj.worldX].attackRange = true;
+			}
+		}
+		listA = listB;
+		listB.clear();
+	}
 }
 
 mapTile World::selectTile(int clickX, int clickY){
@@ -426,6 +465,7 @@ mapTile World::selectTile(int clickX, int clickY){
 		for (int j = 0; j < mapW; j++){
 			map[i][j].selected = false;
 			map[i][j].moveRange = false;
+			map[i][j].attackRange = false;
 		}
 	}
 
@@ -439,7 +479,7 @@ mapTile World::selectTile(int clickX, int clickY){
 					
 					map[i][j].selected = true;
 					
-					checkMovementRange(2, map[i][j].worldX, map[i][j].worldY);
+					//checkMovementRange(5, map[i][j].worldX, map[i][j].worldY);
 					
 					return map[i][j];
 					//map[5][4].selected = true;

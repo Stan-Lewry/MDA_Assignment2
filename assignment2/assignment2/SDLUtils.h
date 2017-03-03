@@ -8,8 +8,10 @@
 #include <vector>
 #include <string>
 
-#define screenW 640
-#define screenH 480
+
+
+#define screenW 960
+#define screenH 960
 
 const int mapW = 15;
 const int mapH = 15;
@@ -24,7 +26,7 @@ public:
 	SDL_Renderer* rend;
 
 	bool initSDL();
-	SDL_Texture* loadPNG(char path[]);
+	//SDL_Texture* loadPNG(char path[]);
 };
 
 #endif

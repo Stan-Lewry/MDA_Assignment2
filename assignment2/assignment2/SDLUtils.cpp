@@ -21,11 +21,11 @@ bool SDLUtils::initSDL(){
 	}
 }
 
-SDL_Texture* SDLUtils::loadPNG(char path[]){
-	printf("loading: %s\n", path);
-	SDL_Surface* tempSurface = IMG_Load(path);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tempSurface);
-	SDL_FreeSurface(tempSurface);
-	printf("Done!\n");
-	return texture;
-}
+//SDL_Texture* SDLUtils::loadPNG(char path[]){
+//	printf("loading: %s\n", path);
+//	SDL_Surface* tempSurface = IMG_Load(path);
+//	SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tempSurface);
+//	SDL_FreeSurface(tempSurface);
+//	printf("Done!\n");
+//	return texture;
+//}

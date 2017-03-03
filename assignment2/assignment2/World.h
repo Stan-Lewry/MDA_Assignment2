@@ -29,7 +29,7 @@ public:
 private:
 
 	int spriteSize = 32;
-	int tileSize = 32;
+	int tileSize = 64;
 };
 
 

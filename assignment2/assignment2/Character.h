@@ -1,6 +1,8 @@
 #ifndef CHARACTER_HEADER
 #define CHARACTER_HEADER
 
+#include "SDLUtils.h"
+
 class Character{
 public:
 	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange);
@@ -16,7 +18,9 @@ public:
 	int getAttkRange();
 	int getHP();
 	char* getName();
+	int getSpriteID();
 
+	bool clickedOn(int x, int y);
 
 private:
 	int worldX;
@@ -27,6 +31,8 @@ private:
 	char* name;
 	int moveRange;
 	int attkRange;
-}
+	int spriteID;
+	bool selected;
+};
 
 #endif
