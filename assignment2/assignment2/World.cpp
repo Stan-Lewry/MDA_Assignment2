@@ -460,24 +460,18 @@ void World::checkAttackRange(int attackDist, int originX, int originY){
 	}
 }
 
-mapTile World::selectTile(int clickX, int clickY){
-	for (int i = 0; i < mapH; i++){
-		for (int j = 0; j < mapW; j++){
-			map[i][j].selected = false;
-			map[i][j].moveRange = false;
-			map[i][j].attackRange = false;
-		}
-	}
+mapTile World::getTile(int clickX, int clickY){
+
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			//map[i][j].selected = false;
 
-			if (clickX > map[i][j].screenX && clickX < map[i][j].screenX + tileSize){
-				if (clickY > map[i][j].screenY && clickY < map[i][j].screenY + tileSize){	
+			if (clickX >= map[i][j].screenX && clickX < map[i][j].screenX + tileSize){
+				if (clickY >= map[i][j].screenY && clickY < map[i][j].screenY + tileSize){	
 					std::cout << "clicked at: " << j << ", " << i << std::endl;
 					
-					map[i][j].selected = true;
+					//map[i][j].selected = true;
 					
 					//checkMovementRange(5, map[i][j].worldX, map[i][j].worldY);
 					
@@ -487,8 +481,22 @@ mapTile World::selectTile(int clickX, int clickY){
 			}
 		}
 	}
+	
 
+}
 
+void World::selectTile(int worldX, int worldY){
+	map[worldY][worldX].selected = true;
+}
+
+void World::clearAll(){
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			map[i][j].selected = false;
+			map[i][j].moveRange = false;
+			map[i][j].attackRange = false;
+		}
+	}
 }
 
 void World::loadMap(){

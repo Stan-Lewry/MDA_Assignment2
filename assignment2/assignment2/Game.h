@@ -13,9 +13,10 @@ public:
 
 	
 	void initCharacters();
-
+	bool selectCharacter(int mouseX, int mouseY);
 	void update(InputState inputState);
-
+	void switchCharacterLists();
+	void endTurn();
 	void gameLoop();
 private:
 
@@ -24,8 +25,9 @@ private:
 	Input* input;
 	Renderer* renderer;	
 	World* world;
-	Character* characterList[1];
-	
+	Character* activeCharacterList[1];
+	Character* inactiveCharacterList[1];
+	Character* selectedCharacter;
 
 	bool globalRunning;
 	SDL_Texture* mapTileTexture = NULL;

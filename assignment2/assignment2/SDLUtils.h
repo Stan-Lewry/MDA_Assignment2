@@ -20,6 +20,21 @@ const int mapSize = mapW * mapH;
 //int tileSize = 32;
 //bool globalRunning = true;
 
+
+struct mapTile{
+	int screenX;
+	int screenY;
+	int worldX;
+	int worldY;
+	int typeX;
+	int typeY;
+	bool blocked;
+	bool selected;
+	bool moveRange;
+	bool attackRange;
+};
+
+
 class SDLUtils{
 public: 
 	SDL_Window* window;

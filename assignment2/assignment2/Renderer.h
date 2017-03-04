@@ -8,7 +8,7 @@
 class Renderer{
 public:
 	Renderer(SDL_Renderer* _rend);
-	void render(mapTile map[mapH][mapW], Character* renderableCharacters[1]);
+	void render(mapTile map[mapH][mapW], Character* renderableCharacters1[1], Character* renderableCharacters2[1]);
 	void renderCharacters(Character* renderableCharacters[1]);
 	void renderUI();
 	void renderWorld(mapTile map[mapH][mapW]);

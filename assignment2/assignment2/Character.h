@@ -5,7 +5,7 @@
 
 class Character{
 public:
-	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange);
+	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name);
 	int getWorldX();
 	void setWorldX(int _worldX);
 	int getWorldY();
@@ -20,6 +20,8 @@ public:
 	char* getName();
 	int getSpriteID();
 
+	void moveTo(int _worldX, int _worldY);
+
 	bool clickedOn(int x, int y);
 
 private:
@@ -28,6 +30,10 @@ private:
 	int screenX;
 	int screenY;
 	int hp;
+
+	//int movePoints;
+	//int attkPoints;
+
 	char* name;
 	int moveRange;
 	int attkRange;

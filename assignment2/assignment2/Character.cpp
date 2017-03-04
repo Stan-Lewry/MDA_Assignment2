@@ -1,12 +1,13 @@
 #include "Character.h"
 
-Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange){
+Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name){
 	worldX = _worldX;
 	worldY = _worldY;
 	screenX = _screenX;
 	screenY = _screenY;
 	moveRange = _moveRange;
 	attkRange = _attkRange;
+	name = _name;
 	spriteID = 0;
 	selected = false;
 }
@@ -61,4 +62,13 @@ bool Character::clickedOn(int x, int y){
 		else return false;
 	}
 	else return false;
+}
+
+void Character::moveTo(int _worldX, int _worldY){
+
+	std::cout << "moving character to" << _worldX << "," << _worldY << std::endl;
+	worldX = _worldX;
+	worldY = _worldY;
+	screenX = worldX * 64;
+	screenY = worldY * 64;
 }

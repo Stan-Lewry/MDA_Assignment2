@@ -6,33 +6,79 @@ Game::Game(){
 	globalRunning = sdlUtils->initSDL();
 	world = new World();
 	world->initMap();
-	//renderer = new Renderer(sdlUtils->rend, sdlUtils->loadPNG("Assets/tiles01.png"));
 	renderer = new Renderer(sdlUtils->rend);
 	initCharacters();
+	selectedCharacter = NULL;
 }
 
 
 void Game::initCharacters(){
-	characterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1);
+	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1, "knight");
+	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 7 * tileSize, 3, 1, "knight");
+}
+
+void Game::switchCharacterLists(){
+	Character* tempCharacterList = *activeCharacterList;
+	*activeCharacterList = *inactiveCharacterList;
+	*inactiveCharacterList = tempCharacterList;
+}
+
+void Game::endTurn(){
+	switchCharacterLists();
+}
+
+bool Game::selectCharacter(int mouseX, int mouseY){
+	for (int i = 0; i < 1; i++){
+		if (activeCharacterList[i]->clickedOn(mouseX, mouseY)){
+			selectedCharacter = activeCharacterList[i];
+			return true;
+		}
+	}
+	return false;
 }
 
 void Game::update(InputState inputState){
-	if (inputState.quit == true){
+	
+	if (inputState.quit){
 		globalRunning = false;
 	}
-	else if (inputState.mouseButtonDown == true){
-		//clearSelection();
-		//checkClick(inputState.mouseX, inputState.mouseY);
-		world->selectTile(inputState.mouseX, inputState.mouseY);
-		for (int i = 0; i < 1; i++){
-			if (characterList[i]->clickedOn(inputState.mouseX, inputState.mouseY)){
-				std::cout << "clicked on character" << std::endl;
-				world->checkAttackRange(characterList[i]->getAttkRange(), characterList[i]->getWorldX(), characterList[i]->getWorldY());				
-				world->checkMovementRange(characterList[i]->getMoveRange(), characterList[i]->getWorldX(), characterList[i]->getWorldY());
+	else if (inputState.mouseButtonDown){
+		mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY);
 
+		if (selectedCharacter == NULL){
+			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+				world->clearAll();
+				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+			}
+			else{
+				world->clearAll();
+				world->selectTile(selectedTile.worldX, selectedTile.worldY);
 			}
 		}
+		else if (selectedCharacter != NULL){
+			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+				world->clearAll();
+				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+			}
+			else if (selectedTile.moveRange){
+				world->clearAll();
+				selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
+				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+			}
+			else{
+				world->clearAll();
+				world->selectTile(selectedTile.worldX, selectedTile.worldY);
+			}
+		}
+		
 	}
+	else if (inputState.space){
+		endTurn();
+	}
+	
 }
 
 
@@ -42,6 +88,7 @@ void Game::gameLoop(){
 		input->handleEvents();
 		update(input->getCurrentInputState()); 
 		//renderMap();
-		renderer->render(world->map, characterList);
+		renderer->render(world->map, activeCharacterList, inactiveCharacterList);
+		
 	}
 }

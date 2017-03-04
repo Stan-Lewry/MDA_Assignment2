@@ -8,6 +8,7 @@ struct InputState{
 	int mouseX;
 	int mouseY;
 	bool quit;
+	bool space;
 };
 
 

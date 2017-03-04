@@ -7,10 +7,11 @@ Renderer::Renderer(SDL_Renderer* _rend){
 	initTextures();
 }
 
-void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters[1]){
+void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters1[1], Character* renderableCharacters2[1]){
 	SDL_RenderClear(rend);
 	renderWorld(map);
-	renderCharacters(renderableCharacters);
+	renderCharacters(renderableCharacters1);
+	renderCharacters(renderableCharacters2); 
 	SDL_RenderPresent(rend);
 }
 
@@ -62,6 +63,6 @@ SDL_Texture* Renderer::loadPNG(char path[]){
 }
 
 void Renderer::initTextures(){
-	worldSpriteSheet = loadPNG("Assets/tiles01.png");
+	worldSpriteSheet = loadPNG("Assets/tiles02.png");
 	characterSpriteSheet = loadPNG("Assets/knight.png");
 }

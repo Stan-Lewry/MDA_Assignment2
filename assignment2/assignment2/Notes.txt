@@ -72,9 +72,13 @@ TODO:
 	DONE Begin to consider framework - move input handling to a seperate class
 	DONE move core utilities to a seperate class
 	DONE move game functionality to a seperate class
-	move rendering functionality to a new class
-	move map stuff to a new class
+	DONE move rendering functionality to a new class
+	DONE move map stuff to a new class
 	DONE Implement withinRange
-	implement a*
 
+	Character class - implement movement
+	Character class - implement attacking
+
+
+	implement a* powered animate along path
 
