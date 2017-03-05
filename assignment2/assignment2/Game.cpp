@@ -14,7 +14,7 @@ Game::Game(){
 
 void Game::initCharacters(){
 	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1, "knight");
-	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 7 * tileSize, 3, 1, "knight");
+	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 3, 1, "knight");
 }
 
 void Game::switchCharacterLists(){
@@ -25,6 +25,7 @@ void Game::switchCharacterLists(){
 
 void Game::endTurn(){
 	switchCharacterLists();
+	world->clearAll();
 }
 
 bool Game::selectCharacter(int mouseX, int mouseY){
