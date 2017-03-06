@@ -13,6 +13,8 @@
 #define screenW 960
 #define screenH 960
 
+#define teamSize 2
+
 const int mapW = 15;
 const int mapH = 15;
 const int mapSize = mapW * mapH;
@@ -32,6 +34,7 @@ struct mapTile{
 	bool selected;
 	bool moveRange;
 	bool attackRange;
+	//bool rangedAttackRange
 };
 
 

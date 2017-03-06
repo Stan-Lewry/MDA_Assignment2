@@ -8,10 +8,10 @@
 class Renderer{
 public:
 	Renderer(SDL_Renderer* _rend);
-	void render(mapTile map[mapH][mapW], Character* renderableCharacters1[1], Character* renderableCharacters2[1]);
-	void renderCharacters(Character* renderableCharacters[1]);
+	void render(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter);
+	void renderCharacters(Character* renderableCharacters[teamSize]);
 	void renderUI();
-	void renderWorld(mapTile map[mapH][mapW]);
+	void renderWorld(mapTile map[mapH][mapW], Character* currentCharacter);
 	void initTextures();
 	SDL_Texture* loadPNG(char path[]);
 

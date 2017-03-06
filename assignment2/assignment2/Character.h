@@ -5,7 +5,7 @@
 
 class Character{
 public:
-	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name);
+	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name, int _spriteID, int _movePoints, int _attkPoints);
 	int getWorldX();
 	void setWorldX(int _worldX);
 	int getWorldY();
@@ -19,10 +19,22 @@ public:
 	int getHP();
 	char* getName();
 	int getSpriteID();
+	int getMovePoints();
+	void setMovePoints(int p);
+	int getAttkPoints();
+	void setAttkPoints(int p);
 
+	int getAnimationFrame();
+	void setAnimationFrame(int frame);
+
+	bool isIdle();
+	void setIdle(bool i);
+	
 	void moveTo(int _worldX, int _worldY);
 
 	bool clickedOn(int x, int y);
+
+
 
 private:
 	int worldX;
@@ -31,14 +43,18 @@ private:
 	int screenY;
 	int hp;
 
-	//int movePoints;
-	//int attkPoints;
+	int movePoints;
+	int attkPoints;
 
 	char* name;
 	int moveRange;
 	int attkRange;
 	int spriteID;
 	bool selected;
+
+	int animationFrame;
+
+	bool idle;
 };
 
 #endif

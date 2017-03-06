@@ -8,34 +8,61 @@ Game::Game(){
 	world->initMap();
 	renderer = new Renderer(sdlUtils->rend);
 	initCharacters();
-	selectedCharacter = NULL;
+	selectedCharacter = activeCharacterList[0];
 }
 
 
 void Game::initCharacters(){
-	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1, "knight");
-	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 3, 1, "knight");
+	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1, "knight", 0, 1, 1);
+	activeCharacterList[1] = new Character(3, 2, 3 * tileSize, 2 * tileSize, 2, 3, "wizard", 2, 1, 1);
+
+	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 3, 1, "knight", 1, 1, 1);
+	inactiveCharacterList[1] = new Character(12, 13, 12 * tileSize, 13 * tileSize, 2, 3, "wizard", 3, 1, 1);
 }
 
-void Game::switchCharacterLists(){
+void Game::switchCharacterLists(){ //NEEDS FIXING
 	Character* tempCharacterList = *activeCharacterList;
 	*activeCharacterList = *inactiveCharacterList;
 	*inactiveCharacterList = tempCharacterList;
 }
 
 void Game::endTurn(){
+	for (int i = 0; i < teamSize; i++){
+		activeCharacterList[i]->setIdle(false);
+		inactiveCharacterList[i]->setIdle(false);
+	}
 	switchCharacterLists();
 	world->clearAll();
 }
 
 bool Game::selectCharacter(int mouseX, int mouseY){
-	for (int i = 0; i < 1; i++){
+	for (int i = 0; i < teamSize; i++){
 		if (activeCharacterList[i]->clickedOn(mouseX, mouseY)){
 			selectedCharacter = activeCharacterList[i];
 			return true;
 		}
 	}
 	return false;
+}
+
+void Game::getRanges(Character* c){
+	/*
+	if (c->getAttkRange() > c->getMoveRange()){
+		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
+		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
+	}
+	else{
+		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
+		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
+	}
+	*/
+
+	if (c->getMovePoints() > 0){
+		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
+	}
+	if (c->getAttkPoints() > 0){
+		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
+	}
 }
 
 void Game::update(InputState inputState){
@@ -49,8 +76,7 @@ void Game::update(InputState inputState){
 		if (selectedCharacter == NULL){
 			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
 				world->clearAll();
-				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
-				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				getRanges(selectedCharacter);
 			}
 			else{
 				world->clearAll();
@@ -60,14 +86,19 @@ void Game::update(InputState inputState){
 		else if (selectedCharacter != NULL){
 			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
 				world->clearAll();
-				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
-				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				getRanges(selectedCharacter);
 			}
 			else if (selectedTile.moveRange){
 				world->clearAll();
-				selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
-				world->checkMovementRange(selectedCharacter->getMoveRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
-				world->checkAttackRange(selectedCharacter->getAttkRange(), selectedCharacter->getWorldX(), selectedCharacter->getWorldY());
+				if (selectedCharacter->getMovePoints() > 0){
+					selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
+					if (selectedCharacter->getMovePoints() > 0){
+						getRanges(selectedCharacter);
+					}
+					
+				}
+
+				//getRanges(selectedCharacter);
 			}
 			else{
 				world->clearAll();
@@ -79,6 +110,15 @@ void Game::update(InputState inputState){
 	else if (inputState.space){
 		endTurn();
 	}
+
+	for (int i = 0; i < teamSize; i++){
+		if (!activeCharacterList[i]->isIdle() && activeCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1 ){
+			activeCharacterList[i]->setIdle(true);
+		}
+		if (!inactiveCharacterList[i]->isIdle() && inactiveCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1){
+			inactiveCharacterList[i]->setIdle(true);
+		}
+	}
 	
 }
 
@@ -89,7 +129,7 @@ void Game::gameLoop(){
 		input->handleEvents();
 		update(input->getCurrentInputState()); 
 		//renderMap();
-		renderer->render(world->map, activeCharacterList, inactiveCharacterList);
+		renderer->render(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter);
 		
 	}
 }
