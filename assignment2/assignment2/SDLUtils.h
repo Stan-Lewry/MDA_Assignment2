@@ -7,17 +7,25 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <algorithm>
 
 
 #define screenW 960
 #define screenH 960
 
-#define teamSize 2
+//#define screenW 640
+//#define screenH 480
+
+#define teamSize 3
 
 const int mapW = 15;
 const int mapH = 15;
 const int mapSize = mapW * mapH;
+
+
+//int renderOffsetX = -200;
+//int renderOffsetY = -200;
+
 //int spriteSize = 32;
 //int tileSize = 32;
 //bool globalRunning = true;

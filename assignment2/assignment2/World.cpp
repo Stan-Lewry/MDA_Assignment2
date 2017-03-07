@@ -460,15 +460,15 @@ void World::checkAttackRange(int attackDist, int originX, int originY){
 	}
 }
 
-mapTile World::getTile(int clickX, int clickY){
+mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffsetY){
 
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			//map[i][j].selected = false;
 
-			if (clickX >= map[i][j].screenX && clickX < map[i][j].screenX + tileSize){
-				if (clickY >= map[i][j].screenY && clickY < map[i][j].screenY + tileSize){	
+			if (clickX >= map[i][j].screenX + renderOffsetX && clickX < map[i][j].screenX + renderOffsetX + tileSize){
+				if (clickY >= map[i][j].screenY + renderOffsetY && clickY < map[i][j].screenY + renderOffsetY + tileSize){	
 					std::cout << "clicked at: " << j << ", " << i << std::endl;
 					
 					//map[i][j].selected = true;

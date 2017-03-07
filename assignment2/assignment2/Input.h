@@ -9,6 +9,11 @@ struct InputState{
 	int mouseY;
 	bool quit;
 	bool space;
+
+	bool up;
+	bool down;
+	bool left;
+	bool right;
 };
 
 

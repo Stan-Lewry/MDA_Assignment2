@@ -20,8 +20,8 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
-			dRect.x = map[i][j].screenX;
-			dRect.y = map[i][j].screenY;
+			dRect.x = map[i][j].screenX + renderOffsetX;
+			dRect.y = map[i][j].screenY + renderOffsetY;
 			sRect.x = map[i][j].typeX;
 			sRect.y = map[i][j].typeY;
 			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
@@ -63,7 +63,7 @@ void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
 	//std::cout << "render characters called" << std::endl;
 	for (int i = 0; i < teamSize; i++){
 		SDL_Rect sRect = { renderableCharacters[i]->getAnimationFrame() * spriteSize, renderableCharacters[i]->getSpriteID() * spriteSize, spriteSize, spriteSize };
-		SDL_Rect dRect = { renderableCharacters[i]->getScreenX(), renderableCharacters[i]->getScreenY(), tileSize, tileSize };
+		SDL_Rect dRect = { renderableCharacters[i]->getScreenX() + renderOffsetX, renderableCharacters[i]->getScreenY() + renderOffsetY, tileSize, tileSize };
 		SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
 	}
 }
@@ -80,4 +80,20 @@ SDL_Texture* Renderer::loadPNG(char path[]){
 void Renderer::initTextures(){
 	worldSpriteSheet = loadPNG("Assets/tiles02.png");
 	characterSpriteSheet = loadPNG("Assets/characters.png");
+}
+
+int Renderer::getRenderOffsetX(){
+	return renderOffsetX;
+}
+
+int Renderer::getRanderOffsetY(){
+	return renderOffsetY;
+}
+
+void Renderer::addOffsetX(int a){
+	renderOffsetX += a;
+}
+
+void Renderer::addOffsetY(int a){
+	renderOffsetY += a;
 }

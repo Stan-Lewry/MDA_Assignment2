@@ -1,6 +1,6 @@
 #ifndef CHARACTER_HEADER
 #define CHARACTER_HEADER
-
+//#include <iostream>
 #include "SDLUtils.h"
 
 class Character{
@@ -32,7 +32,7 @@ public:
 	
 	void moveTo(int _worldX, int _worldY);
 
-	bool clickedOn(int x, int y);
+	bool clickedOn(int x, int y, int renderOffsetX, int renderOffsetY);
 
 
 

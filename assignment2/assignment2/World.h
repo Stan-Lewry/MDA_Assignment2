@@ -14,7 +14,7 @@ public:
 	void checkMovementRange(int moveDist, int originX, int originY);
 	void checkAttackRange(int attackDist, int originX, int originY);
 	void selectTile(int worldX, int worldY);
-	mapTile getTile(int clickX, int clickY);
+	mapTile getTile(int clickX, int clickY, int renderOffsetX, int renderOffsetY);
 	void clearAll();
 	void loadMap();
 

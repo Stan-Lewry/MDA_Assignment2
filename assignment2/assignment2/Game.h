@@ -38,6 +38,7 @@ private:
 	//SDL_Event evnt;
 	int tileSize = 64;
 
+	int scrollSpeed = 30;
 	
 };
 

@@ -1,11 +1,11 @@
 #include "Input.h"
 
 Input::Input(){
-	inputState = { false, 0, 0, false, false };
+	inputState = { false, 0, 0, false, false, false, false, false, false};
 }
 
 void Input::handleEvents(){
-	inputState = { false, 0, 0, false, false };
+	inputState = { false, 0, 0, false, false, false, false, false, false };
 	while (SDL_PollEvent(&evnt)){
 		switch (evnt.type){
 		case SDL_QUIT:
@@ -16,8 +16,25 @@ void Input::handleEvents(){
 			SDL_GetMouseState(&inputState.mouseX, &inputState.mouseY);
 			break;
 		case SDL_KEYDOWN:
-			std::cout << "space bar" << std::endl;
-			inputState.space = true;
+			switch (evnt.key.keysym.sym){
+			case SDLK_SPACE:
+				inputState.space = true;
+				break;
+			case SDLK_UP:
+				inputState.up = true;
+				break;
+			case SDLK_DOWN:
+				inputState.down = true;
+				break;
+			case SDLK_LEFT:
+				inputState.left = true;
+				break;
+			case SDLK_RIGHT:
+				inputState.right = true;
+				break;
+			default:
+				break;
+			}
 			break;
 		default:
 			break;

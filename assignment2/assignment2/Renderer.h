@@ -15,12 +15,21 @@ public:
 	void initTextures();
 	SDL_Texture* loadPNG(char path[]);
 
+	int getRenderOffsetX();
+	int getRanderOffsetY();
+
+	void addOffsetX(int a);
+	void addOffsetY(int a);
+
 private:
 	SDL_Renderer* rend;
 	SDL_Texture* worldSpriteSheet;
 	SDL_Texture* characterSpriteSheet;
 	int spriteSize = 32;
 	int tileSize = 64;
+	int renderOffsetX = 0;
+	int renderOffsetY = 0;
+
 };
 
 #endif

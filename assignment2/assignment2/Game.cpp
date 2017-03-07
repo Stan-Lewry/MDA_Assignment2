@@ -13,17 +13,20 @@ Game::Game(){
 
 
 void Game::initCharacters(){
-	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 3, 1, "knight", 0, 1, 1);
+	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 2, 1, "knight", 0, 1, 1);
 	activeCharacterList[1] = new Character(3, 2, 3 * tileSize, 2 * tileSize, 2, 3, "wizard", 2, 1, 1);
+	activeCharacterList[2] = new Character(2, 13, 2 * tileSize, 13 * tileSize, 4, 1, "samurai", 4, 1, 1); // this will be changed, will actually have more move points
 
-	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 3, 1, "knight", 1, 1, 1);
+	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 2, 1, "knight", 1, 1, 1);
 	inactiveCharacterList[1] = new Character(12, 13, 12 * tileSize, 13 * tileSize, 2, 3, "wizard", 3, 1, 1);
+	inactiveCharacterList[2] = new Character(9, 9, 9 * tileSize, 9 * tileSize, 4, 1, "samurai", 5, 1,  1); // same as above 
 }
 
 void Game::switchCharacterLists(){ //NEEDS FIXING
-	Character* tempCharacterList = *activeCharacterList;
-	*activeCharacterList = *inactiveCharacterList;
-	*inactiveCharacterList = tempCharacterList;
+	//Character* tempCharacterList[teamSize] = activeCharacterList;
+	//activeCharacterList = inactiveCharacterList;
+	//inactiveCharacterList = tempCharacterList;
+	std::swap(activeCharacterList, inactiveCharacterList);
 }
 
 void Game::endTurn(){
@@ -37,7 +40,7 @@ void Game::endTurn(){
 
 bool Game::selectCharacter(int mouseX, int mouseY){
 	for (int i = 0; i < teamSize; i++){
-		if (activeCharacterList[i]->clickedOn(mouseX, mouseY)){
+		if (activeCharacterList[i]->clickedOn(mouseX, mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY())){
 			selectedCharacter = activeCharacterList[i];
 			return true;
 		}
@@ -71,7 +74,7 @@ void Game::update(InputState inputState){
 		globalRunning = false;
 	}
 	else if (inputState.mouseButtonDown){
-		mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY);
+		mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(),renderer->getRanderOffsetY() );
 
 		if (selectedCharacter == NULL){
 			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
@@ -107,8 +110,22 @@ void Game::update(InputState inputState){
 		}
 		
 	}
+	
 	else if (inputState.space){
 		endTurn();
+	}
+
+	if (inputState.up){
+		renderer->addOffsetY(scrollSpeed);
+	}
+	if (inputState.down){
+		renderer->addOffsetY(-scrollSpeed);
+	}
+	if (inputState.left){
+		renderer->addOffsetX(scrollSpeed);
+	}
+	if (inputState.right){
+		renderer->addOffsetX(-scrollSpeed);
 	}
 
 	for (int i = 0; i < teamSize; i++){

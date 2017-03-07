@@ -91,6 +91,8 @@ void Character::setIdle(bool i){
 		animationFrame = 0;
 	}
 	else{
+		movePoints = 1;
+		attkPoints = 1;
 		idle = false;
 		animationFrame = 1;
 	}
@@ -98,10 +100,10 @@ void Character::setIdle(bool i){
 
 }
 
-bool Character::clickedOn(int x, int y){
+bool Character::clickedOn(int x, int y, int rendererOffsetX, int rendererOffsetY){
 	std::cout << "character->clickedOn" << std::endl;
-	if (x >= screenX && x < screenX + 64){
-		if (y >= screenY && y < screenY + 64){
+	if (x >= screenX + rendererOffsetX && x < screenX + rendererOffsetX + 64){
+		if (y >= screenY + rendererOffsetY && y < screenY + rendererOffsetY + 64){
 			return true;
 		}
 		else return false;
