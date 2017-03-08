@@ -7,6 +7,7 @@ Game::Game(){
 	world = new World();
 	world->initMap();
 	renderer = new Renderer(sdlUtils->rend);
+	ui = new UI();
 	initCharacters();
 	selectedCharacter = activeCharacterList[0];
 }
@@ -40,7 +41,7 @@ void Game::endTurn(){
 
 bool Game::selectCharacter(int mouseX, int mouseY){
 	for (int i = 0; i < teamSize; i++){
-		if (activeCharacterList[i]->clickedOn(mouseX, mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY())){
+		if (activeCharacterList[i]->clickedOn(mouseX, mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY()) && activeCharacterList[i]->isDead() == false){
 			selectedCharacter = activeCharacterList[i];
 			return true;
 		}
@@ -143,10 +144,24 @@ void Game::update(InputState inputState){
 
 void Game::gameLoop(){
 	while (globalRunning){
+
+		oldTime = currentTime;
+		currentTime = SDL_GetTicks();
+		ftime = (currentTime - oldTime) / 1000.0f;
+	
+		frames++;
+		timer += ftime;
+		if (timer > 1){
+			std::cout << frames << std::endl;
+			frames = 0;
+			timer = 0;
+		}
+
+
 		input->handleEvents();
 		update(input->getCurrentInputState()); 
 		//renderMap();
-		renderer->render(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter);
+		renderer->render(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter, ui->getElementList());
 		
 	}
 }

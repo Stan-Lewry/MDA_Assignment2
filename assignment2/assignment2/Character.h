@@ -1,7 +1,7 @@
 #ifndef CHARACTER_HEADER
 #define CHARACTER_HEADER
-//#include <iostream>
-#include "SDLUtils.h"
+#include <iostream>
+//#include "SDLUtils.h"
 
 class Character{
 public:
@@ -34,8 +34,8 @@ public:
 
 	bool clickedOn(int x, int y, int renderOffsetX, int renderOffsetY);
 
-
-
+	void setDead(bool d);
+	bool isDead();
 private:
 	int worldX;
 	int worldY;
@@ -54,6 +54,7 @@ private:
 
 	int animationFrame;
 
+	bool dead;
 	bool idle;
 };
 

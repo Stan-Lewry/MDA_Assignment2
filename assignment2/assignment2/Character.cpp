@@ -12,8 +12,8 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 	attkPoints = _attkPoints;
 	movePoints = _movePoints;
 	selected = false;
-
-	animationFrame = 1;
+	dead = false;
+	animationFrame = 2;
 }
 
 int Character::getWorldX(){
@@ -88,16 +88,26 @@ bool Character::isIdle(){
 void Character::setIdle(bool i){
 	if (i == true){
 		idle = true;
-		animationFrame = 0;
+		animationFrame = 1;
 	}
 	else{
 		movePoints = 1;
 		attkPoints = 1;
 		idle = false;
-		animationFrame = 1;
+		animationFrame = 2;
 	}
 	
 
+}
+
+
+void Character::setDead(bool d){
+	dead = d;
+	animationFrame = 0;
+}
+
+bool Character::isDead(){
+	return dead;
 }
 
 bool Character::clickedOn(int x, int y, int rendererOffsetX, int rendererOffsetY){

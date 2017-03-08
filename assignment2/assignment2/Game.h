@@ -4,9 +4,10 @@
 
 #include "SDLUtils.h"
 #include "Input.h"
-//#include "World.h"
+#include "World.h"
 #include "Renderer.h"
 #include "Character.h"
+#include "UI.h"
 
 class Game{
 public:
@@ -23,9 +24,16 @@ public:
 private:
 
 
+	Uint32 oldTime;
+	Uint32 currentTime;
+	float ftime;
+	float timer;
+	int frames;
+
 	SDLUtils* sdlUtils;
 	Input* input;
 	Renderer* renderer;	
+	UI* ui;
 	World* world;
 	Character* activeCharacterList[teamSize];
 	Character* inactiveCharacterList[teamSize];

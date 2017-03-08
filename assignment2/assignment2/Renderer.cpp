@@ -7,11 +7,13 @@ Renderer::Renderer(SDL_Renderer* _rend){
 	initTextures();
 }
 
-void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter){
+void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter, UIElement renderableUIElements[1]){
 	SDL_RenderClear(rend);
+	renderMapBackground();
 	renderWorld(map, currentCharacter);
 	renderCharacters(renderableCharacters1);
 	renderCharacters(renderableCharacters2); 
+	renderUI(renderableUIElements, currentCharacter);
 	SDL_RenderPresent(rend);
 }
 
@@ -68,6 +70,33 @@ void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
 	}
 }
 
+void Renderer::renderUI(UIElement renderableUIElements[1], Character* currentCharacter){
+	SDL_Rect sRect;
+	SDL_Rect dRect;
+	for (int i = 0; i < 1; i++){
+		sRect = { renderableUIElements[i].sourceX, renderableUIElements[i].sourceY, renderableUIElements[i].width, renderableUIElements[i].height };
+		dRect = { renderableUIElements[i].screenX, renderableUIElements[i].screenY, renderableUIElements[i].width, renderableUIElements[i].height };
+		SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
+	}
+
+	sRect = { 2 * spriteSize, currentCharacter->getSpriteID() * spriteSize, spriteSize, spriteSize };
+	dRect = { 75, 70, 150, 150 };
+	SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+}
+
+
+void Renderer::renderMapBackground(){
+	SDL_Rect sRect = {0, 2 * spriteSize, spriteSize, spriteSize};
+	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
+	for (int i = 0; i < (screenH/ tileSize) + 2; i++){
+		for (int j = 0; j < screenW/ tileSize; j++){
+			dRect.x = j * tileSize;
+			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+		}
+		dRect.x = 0;
+		dRect.y = i * tileSize;
+	}
+}
 SDL_Texture* Renderer::loadPNG(char path[]){
 	printf("loading: %s\n", path);
 	SDL_Surface* tempSurface = IMG_Load(path);
@@ -80,6 +109,7 @@ SDL_Texture* Renderer::loadPNG(char path[]){
 void Renderer::initTextures(){
 	worldSpriteSheet = loadPNG("Assets/tiles02.png");
 	characterSpriteSheet = loadPNG("Assets/characters.png");
+	uiSpriteSheet = loadPNG("Assets/ui.png");
 }
 
 int Renderer::getRenderOffsetX(){
@@ -96,4 +126,8 @@ void Renderer::addOffsetX(int a){
 
 void Renderer::addOffsetY(int a){
 	renderOffsetY += a;
+}
+
+int Renderer::getMapSpaceOffset(){
+	return mapSpaceOffset;
 }

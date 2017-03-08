@@ -10,13 +10,17 @@
 #include <algorithm>
 
 
+
+
 #define screenW 960
 #define screenH 960
 
-//#define screenW 640
-//#define screenH 480
+#define screenW 1280
+#define screenH 720
 
 #define teamSize 3
+
+
 
 const int mapW = 15;
 const int mapH = 15;
@@ -45,6 +49,17 @@ struct mapTile{
 	//bool rangedAttackRange
 };
 
+enum UIAction{ A, B, C };
+
+struct UIElement{
+	int screenX;
+	int screenY;
+	int width;
+	int height;
+	int sourceX;
+	int sourceY;
+	UIAction action;
+};
 
 class SDLUtils{
 public: 
