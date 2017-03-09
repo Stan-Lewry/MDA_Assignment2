@@ -1,19 +1,52 @@
 #include "Character.h"
 
-Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name, int _spriteID, int _movePoints, int _attkPoints){
+Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _spriteID, Profession _profession, char* _name) {
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = _screenX;
-	screenY = _screenY;
-	moveRange = _moveRange;
-	attkRange = _attkRange;
-	name = _name;
+	screenX = (worldX - worldY) * 64 / 2;
+	screenY = (worldX + worldY) * 64 / 4;
 	spriteID = _spriteID;
-	attkPoints = _attkPoints;
-	movePoints = _movePoints;
+	name = _name;
 	selected = false;
 	dead = false;
 	animationFrame = 2;
+
+	profession = _profession;
+	
+	switch (profession){
+	case KNIGHT:
+		hp = 100;
+		movePoints = 1;
+		attkPoints = 1;
+		moveRange = 2;
+		attkRange = 1;
+
+		armour = 12;
+		attk = 15;
+		break;
+	case WIZARD:
+		hp = 70;
+		movePoints = 1;
+		attkPoints = 2;
+		moveRange = 3;
+		attkRange = 5;
+
+		armour = 8;
+		attk = 15;
+		break;
+	case FIGHTER:
+		hp = 50;
+		movePoints = 2;
+		attkPoints = 1;
+		moveRange = 5;
+		attkRange = 1;
+
+		armour = 6;
+		attk = 20;
+		break;
+	default:
+		break;
+	}
 }
 
 int Character::getWorldX(){
@@ -126,8 +159,8 @@ void Character::moveTo(int _worldX, int _worldY){
 	std::cout << "moving character to" << _worldX << "," << _worldY << std::endl;
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = worldX * 64;
-	screenY = worldY * 64;
+	screenX = (worldX - worldY) * 64 / 2;
+	screenY = (worldX + worldY) * 64 / 4;
 	movePoints -= 1;
-	attkPoints -= 1; //TEMPORARY _ FOR TESTING PURPOSES ONLY
+	//attkPoints -= 1; //TEMPORARY _ FOR TESTING PURPOSES ONLY
 }

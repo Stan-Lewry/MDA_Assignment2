@@ -5,6 +5,7 @@ Game::Game(){
 	input = new Input();
 	globalRunning = sdlUtils->initSDL();
 	world = new World();
+	//world->initBlankMap();
 	world->initMap();
 	renderer = new Renderer(sdlUtils->rend);
 	ui = new UI();
@@ -14,13 +15,13 @@ Game::Game(){
 
 
 void Game::initCharacters(){
-	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 2, 1, "knight", 0, 1, 1);
-	activeCharacterList[1] = new Character(3, 2, 3 * tileSize, 2 * tileSize, 2, 3, "wizard", 2, 1, 1);
-	activeCharacterList[2] = new Character(2, 13, 2 * tileSize, 13 * tileSize, 4, 1, "samurai", 4, 1, 1); // this will be changed, will actually have more move points
+	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 0, KNIGHT, "Blue Knight");
+	activeCharacterList[1] = new Character(3, 2, 3 * tileSize, 2 * tileSize,  2, WIZARD, "Blue Wizard");
+	activeCharacterList[2] = new Character(2, 13, 2 * tileSize, 13 * tileSize, 4, FIGHTER, "Blue Fighter");
 
-	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 2, 1, "knight", 1, 1, 1);
-	inactiveCharacterList[1] = new Character(12, 13, 12 * tileSize, 13 * tileSize, 2, 3, "wizard", 3, 1, 1);
-	inactiveCharacterList[2] = new Character(9, 9, 9 * tileSize, 9 * tileSize, 4, 1, "samurai", 5, 1,  1); // same as above 
+	inactiveCharacterList[0] = new Character(12, 6, 12 * tileSize, 6 * tileSize, 1, KNIGHT, "Red Knight");
+	inactiveCharacterList[1] = new Character(12, 13, 12 * tileSize, 13 * tileSize, 3, WIZARD, "Red Wizard");
+	inactiveCharacterList[2] = new Character(9, 9, 9 * tileSize, 9 * tileSize, 5, FIGHTER, "Red Fighter");
 }
 
 void Game::switchCharacterLists(){ //NEEDS FIXING

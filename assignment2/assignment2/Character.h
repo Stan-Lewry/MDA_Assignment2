@@ -3,9 +3,11 @@
 #include <iostream>
 //#include "SDLUtils.h"
 
+enum Profession{KNIGHT, WIZARD, FIGHTER};
+
 class Character{
 public:
-	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _moveRange, int _attkRange, char* _name, int _spriteID, int _movePoints, int _attkPoints);
+	Character(int _worldX, int _worldY, int _screenX, int _screenY, int _spriteID, Profession _profession, char* _name);
 	int getWorldX();
 	void setWorldX(int _worldX);
 	int getWorldY();
@@ -41,21 +43,33 @@ private:
 	int worldY;
 	int screenX;
 	int screenY;
-	int hp;
-
-	int movePoints;
-	int attkPoints;
-
+	
+	
 	char* name;
-	int moveRange;
-	int attkRange;
+	int animationFrame;
+	bool dead;
+	bool idle;
 	int spriteID;
 	bool selected;
 
-	int animationFrame;
+	Profession profession;
 
-	bool dead;
-	bool idle;
+	int hp;
+
+	int movePoints;
+	int maxMovePoints;
+	int attkPoints;
+	int maxAttkPoints;
+	int moveRange;
+	int maxMoveRange;
+	int attkRange;
+	int maxAttkRange;
+
+	int armour;
+	int attk;
+	
+
+
 };
 
 #endif

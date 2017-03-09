@@ -20,6 +20,52 @@ void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters1[
 void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter){
 	SDL_Rect sRect = { 0, 0, spriteSize, spriteSize };
 	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
+	
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			dRect.x = map[i][j].screenX + renderOffsetX;
+			dRect.y = map[i][j].screenY + renderOffsetY;
+			sRect.x = map[i][j].typeX;
+			sRect.y = map[i][j].typeY;
+			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect); 
+
+
+			if (currentCharacter->getAttkRange() > currentCharacter->getMoveRange()){
+				if (map[i][j].moveRange){
+
+					sRect.y = 1 * spriteSize;
+					sRect.x = 9 * spriteSize;
+					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+				}
+				else if (map[i][j].attackRange){
+
+					sRect.y = 1 * spriteSize;
+					sRect.x = 8 * spriteSize;
+					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+				}
+			}
+			else if (currentCharacter->getAttkRange() < currentCharacter->getMoveRange()){
+				if (map[i][j].moveRange){
+					sRect.y = 1 * spriteSize;
+					sRect.x = 9 * spriteSize;
+					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+				}
+				if (map[i][j].attackRange){
+					sRect.y = 1 * spriteSize;
+					sRect.x = 8 * spriteSize;
+					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+				}
+			}
+
+			if (map[i][j].selected){
+				sRect.y = 1 * spriteSize;
+				sRect.x = 7 * spriteSize;
+				SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+			}
+		}
+	}
+
+	/*
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			dRect.x = map[i][j].screenX + renderOffsetX;
@@ -59,6 +105,7 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 			}
 		}
 	}
+	*/
 }
 
 void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
@@ -86,6 +133,11 @@ void Renderer::renderUI(UIElement renderableUIElements[1], Character* currentCha
 
 
 void Renderer::renderMapBackground(){
+	SDL_Rect dRect = { 0, 0, screenW, screenH };
+	SDL_SetRenderDrawColor(rend, 102, 204, 255, 1);
+	SDL_RenderFillRect(rend, &dRect);
+
+	/*
 	SDL_Rect sRect = {0, 2 * spriteSize, spriteSize, spriteSize};
 	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
 	for (int i = 0; i < (screenH/ tileSize) + 2; i++){
@@ -96,6 +148,7 @@ void Renderer::renderMapBackground(){
 		dRect.x = 0;
 		dRect.y = i * tileSize;
 	}
+	*/
 }
 SDL_Texture* Renderer::loadPNG(char path[]){
 	printf("loading: %s\n", path);
@@ -107,8 +160,8 @@ SDL_Texture* Renderer::loadPNG(char path[]){
 }
 
 void Renderer::initTextures(){
-	worldSpriteSheet = loadPNG("Assets/tiles02.png");
-	characterSpriteSheet = loadPNG("Assets/characters.png");
+	worldSpriteSheet = loadPNG("Assets/iso_tiles.png");
+	characterSpriteSheet = loadPNG("Assets/characters_large.png");
 	uiSpriteSheet = loadPNG("Assets/ui.png");
 }
 

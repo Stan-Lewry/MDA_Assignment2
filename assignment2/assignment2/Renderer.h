@@ -35,10 +35,10 @@ private:
 	SDL_Texture* worldSpriteSheet;
 	SDL_Texture* characterSpriteSheet;
 	SDL_Texture* uiSpriteSheet;
-	int spriteSize = 32;
+	int spriteSize = 64;
 	int tileSize = 64;
-	int renderOffsetX = 300;
-	int renderOffsetY = 0;
+	int renderOffsetX = 760;
+	int renderOffsetY = 100;
 
 
 	int mapSpaceOffset = 200;

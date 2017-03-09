@@ -4,6 +4,32 @@ mapTile* World::getMap(){
 	return *map;
 }
 
+void World::initBlankMap(){
+	mapTile grass;
+	grass.typeX = 1 * spriteSize;
+	grass.typeY = 0;
+	grass.blocked = false;
+	grass.selected = false;
+	grass.moveRange = false;
+	grass.attackRange = false;
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			grass.screenX = (j - i) * tileSize / 2;
+			grass.screenY = (j + i) * tileSize / 4;
+			grass.worldX = j;
+			grass.worldY = i;
+
+			map[i][j] = grass;
+			//setIsoScreenCoords(j, i);
+		}
+	}
+}
+
+void World::setIsoScreenCoords(int x, int y){
+	map[y][x].screenX = (x - y) * tileSize / 2;
+	map[y][x].screenY = (x + y) * tileSize / 4;
+}
+
 void World::initMap(){
 
 	mapTile grass;
@@ -17,8 +43,8 @@ void World::initMap(){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 
-			grass.screenX = j * tileSize;
-			grass.screenY = i * tileSize;
+			grass.screenX = (j - i) * tileSize / 2;
+			grass.screenY = (j + i) * tileSize / 4;
 			grass.worldX = j;
 			grass.worldY = i;
 
@@ -35,32 +61,32 @@ void World::initMap(){
 	pathLR.attackRange = false;
 
 	for (int i = 0; i < 4; i++){
-		pathLR.screenY = 3 * tileSize;
-		pathLR.screenX = i * tileSize;
+		pathLR.screenX = (i - 3) * tileSize / 2;
+		pathLR.screenY = (i + 3) * tileSize / 4;
 		pathLR.worldY = 3;
 		pathLR.worldX = i;
 		map[3][i] = pathLR;
 	}
 
 	for (int i = 5; i < 11; i++){
-		pathLR.screenY = 7 * tileSize;
-		pathLR.screenX = i*tileSize;
+		pathLR.screenX = (i - 7) * tileSize / 2;
+		pathLR.screenY = (i + 7) * tileSize / 4;
 		pathLR.worldY = 7;
 		pathLR.worldX = i;
 		map[7][i] = pathLR;
 	}
 
 	for (int i = 12; i < 15; i++){
-		pathLR.screenY = 12 * tileSize;
-		pathLR.screenX = i * tileSize;
+		pathLR.screenX = (i - 12) * tileSize / 2;
+		pathLR.screenY = (i + 12) * tileSize / 4;
 		pathLR.worldY = 12;
 		pathLR.worldX = i;
 		map[12][i] = pathLR;
 	}
 
 	for (int i = 0; i < 5; i++){
-		pathLR.screenY = 11 * tileSize;
-		pathLR.screenX = i * tileSize;
+		pathLR.screenX = (i - 11) * tileSize / 2;
+		pathLR.screenY = (i + 11) * tileSize / 4;
 		pathLR.worldY = 11;
 		pathLR.worldX = i;
 		map[11][i] = pathLR;
@@ -75,24 +101,24 @@ void World::initMap(){
 	path1.moveRange = false;
 
 	for (int i = 4; i < 7; i++){
-		path1.screenX = 4 * tileSize;
-		path1.screenY = i * tileSize;
+		path1.screenX = (4 - i) * tileSize / 2;
+		path1.screenY = (4 + i) * tileSize / 4;
 		path1.worldX = 4;
 		path1.worldY = i;
 		map[i][4] = path1;
 	}
 
 	for (int i = 8; i < 12; i++){
-		path1.screenX = 11 * tileSize;
-		path1.screenY = i * tileSize;
+		path1.screenX = (11 - i) * tileSize / 2;
+		path1.screenY = (11 + i) * tileSize / 4;
 		path1.worldX = 11;
 		path1.worldY = i;
 		map[i][11] = path1;
 	}
 
 	for (int i = 12; i < 15; i++){
-		path1.screenX = 5 * tileSize;
-		path1.screenY = i * tileSize;
+		path1.screenX = (5 - i) * tileSize / 2;
+		path1.screenY = (5 + i) * tileSize / 4;
 		path1.worldX = 5;
 		path1.worldY = i;
 		map[i][5] = path1;
@@ -106,20 +132,20 @@ void World::initMap(){
 	path4.moveRange = false;
 	path4.attackRange = false;
 
-	path4.screenX = 4 * tileSize;
-	path4.screenY = 3 * tileSize;
+	path4.screenX = (4 - 3) * tileSize / 2;
+	path4.screenY = (4 + 3) * tileSize / 4;
 	path4.worldX = 4;
 	path4.worldY = 3;
 	map[3][4] = path4;
 
-	path4.screenX = 11 * tileSize;
-	path4.screenY = 7 * tileSize;
+	path4.screenX = (11 - 7) * tileSize / 2;
+	path4.screenY = (11 + 7) * tileSize / 4;
 	path4.worldX = 11;
 	path4.worldY = 7;
 	map[7][11] = path4;
 
-	path4.screenX = 5 * tileSize;
-	path4.screenY = 11 * tileSize;
+	path4.screenX = (5 - 11) * tileSize / 2;
+	path4.screenY = (5 + 11) * tileSize / 4;
 	path4.worldX = 5;
 	path4.worldY = 11;
 	map[11][5] = path4;
@@ -132,18 +158,19 @@ void World::initMap(){
 	path6.attackRange = false;
 	path6.moveRange = false;
 
-	path6.screenX = 4 * tileSize;
-	path6.screenY = 7 * tileSize;
+	path6.screenX = (4 - 7) * tileSize / 2;
+	path6.screenY = (4 + 7) * tileSize / 4;
 	path6.worldX = 4;
 	path6.worldY = 7;
 	map[7][4] = path6;
 
-	path6.screenX = 11 * tileSize;
-	path6.screenY = 12 * tileSize;
+	path6.screenX = (11 - 12) * tileSize / 2;
+	path6.screenY = (11 + 12) * tileSize / 4;
 	path6.worldX = 11;
 	path6.worldY = 12;
 	map[12][11] = path6;
 
+	
 	mapTile wall2;
 	wall2.typeX = 2 * spriteSize;
 	wall2.typeY = 1 * spriteSize;
@@ -153,45 +180,45 @@ void World::initMap(){
 	wall2.attackRange = false;
 
 	for (int i = 0; i < 7; i++){
-		wall2.screenX = 6 * tileSize;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (6 - i) * tileSize / 2;
+		wall2.screenY = (6 + i) * tileSize / 4;
 		wall2.worldX = 6;
 		wall2.worldY = i;
 		map[i][6] = wall2;
 	}
 
 	for (int i = 0; i < 2; i++){
-		wall2.screenX = 9 * tileSize;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (9 - i) * tileSize / 2;
+		wall2.screenY = (9 + i) * tileSize / 4;
 		wall2.worldX = 9;
 		wall2.worldY = i;
 		map[i][9] = wall2;
 	}
 
 	for (int i = 3; i < 11; i++){
-		wall2.screenX = 13 * tileSize;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (13 - i) * tileSize / 2;
+		wall2.screenY = (13 + i) * tileSize / 4;
 		wall2.worldX = 13;
 		wall2.worldY = i;
 		map[i][13] = wall2;
 	}
 	for (int i = 8; i < 11; i++){
-		wall2.screenX = 6 * tileSize;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (6 - i) * tileSize / 2;
+		wall2.screenY = (6 + i) * tileSize / 4;
 		wall2.worldX = 6;
 		wall2.worldY = i;
 		map[i][6] = wall2;
 	}
 	for (int i = 13; i < 15; i++){
-		wall2.screenX = 0;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (0 - i) * tileSize / 2;
+		wall2.screenY = (0 + i) * tileSize / 4;
 		wall2.worldX = 0;
 		wall2.worldY = i;
 		map[i][0] = wall2;
 	}
 	for (int i = 13; i < 15; i++){
-		wall2.screenX = 4 * tileSize;
-		wall2.screenY = i * tileSize;
+		wall2.screenX = (4 - i) * tileSize / 2;
+		wall2.screenY = (4 + i) * tileSize / 4;
 		wall2.worldX = 4;
 		wall2.worldY = i;
 		map[i][4] = wall2;
@@ -206,35 +233,35 @@ void World::initMap(){
 	wall1.attackRange = false;
 
 	for (int i = 10; i < 13; i++){
-		wall1.screenX = i * tileSize;
-		wall1.screenY = 2 * tileSize;
+		wall1.screenX = (i - 2) * tileSize / 2;
+		wall1.screenY = (i + 2) * tileSize / 4;
 		wall1.worldX = i;
 		wall1.worldY = 2;
 		map[2][i] = wall1;
 	}
 
 	for (int i = 7; i < 11; i++){
-		wall1.screenX = i * tileSize;
-		wall1.screenY = 11 * tileSize;
+		wall1.screenX = (i - 11) * tileSize / 2;
+		wall1.screenY = (i + 11) * tileSize / 4;
 		wall1.worldX = i;
 		wall1.worldY = 11;
 		map[11][i] = wall1;
 	}
 
-	wall1.screenX = 1 * tileSize;
-	wall1.screenY = 12 * tileSize;
+	wall1.screenX = (1 - 12) * tileSize / 2;
+	wall1.screenY = (1 + 12) * tileSize / 4;
 	wall1.worldX = 1;
 	wall1.worldY = 12;
 	map[12][1] = wall1;
 
-	wall1.screenX = 3 * tileSize;
-	wall1.screenY = 12 * tileSize;
+	wall1.screenX = (3 - 12) * tileSize / 2;
+	wall1.screenY = (3 + 12) * tileSize / 4;
 	wall1.worldX = 3;
 	wall1.worldY = 12;
 	map[12][3] = wall1;
 
-	wall1.screenX = 12 * tileSize;
-	wall1.screenY = 11 * tileSize;
+	wall1.screenX = (12 - 11) * tileSize / 2;
+	wall1.screenY = (12 + 11) * tileSize / 4;
 	wall1.worldX = 12;
 	wall1.worldY = 11;
 	map[11][12] = wall1;
@@ -246,8 +273,8 @@ void World::initMap(){
 	wall4.selected = false;
 	wall4.moveRange = false;
 	wall4.attackRange = false;
-	wall4.screenX = 0;
-	wall4.screenY = 12 * tileSize;
+	wall4.screenX = (0 - 12) * tileSize / 2;
+	wall4.screenY = (0 + 12) * tileSize / 4;
 	wall4.worldX = 0;
 	wall4.worldY = 12;
 	map[12][0] = wall4;
@@ -260,14 +287,14 @@ void World::initMap(){
 	wall5.moveRange = false;
 	wall5.attackRange = false;
 
-	wall5.screenX = 4 * tileSize;
-	wall5.screenY = 12 * tileSize;
+	wall5.screenX = (4 - 12) * tileSize / 2;
+	wall5.screenY = (4 + 12) * tileSize / 4;
 	wall5.worldX = 4;
 	wall5.worldY = 12;
 	map[12][4] = wall5;
 
-	wall5.screenX = 13 * tileSize;
-	wall5.screenY = 2 * tileSize;
+	wall5.screenX = (13 - 2) * tileSize / 2;
+	wall5.screenY = (13 + 2) * tileSize / 4;
 	wall5.worldX = 13;
 	wall5.worldY = 2;
 	map[2][13] = wall5;
@@ -280,14 +307,14 @@ void World::initMap(){
 	wall3.moveRange = false;
 	wall3.attackRange = false;
 
-	wall3.screenX = 6 * tileSize;
-	wall3.screenY = 11 * tileSize;
+	wall3.screenX = (6 - 11) * tileSize / 2;
+	wall3.screenY = (6 + 11) * tileSize / 4;
 	wall3.worldX = 6;
 	wall3.worldY = 11;
 	map[11][6] = wall3;
 
-	wall3.screenX = 9 * tileSize;
-	wall3.screenY = 2 * tileSize;
+	wall3.screenX = (9 - 2) * tileSize / 2;
+	wall3.screenY = (9 + 2) * tileSize / 4;
 	wall3.worldX = 9;
 	wall3.worldY = 2;
 	map[2][9] = wall3;
@@ -300,12 +327,12 @@ void World::initMap(){
 	wall6.moveRange = false;
 	wall6.attackRange = false;
 
-	wall6.screenX = 13 * tileSize;
-	wall6.screenY = 11 * tileSize;
+	wall6.screenX = (13 - 11) * tileSize / 2;
+	wall6.screenY = (13 + 11) * tileSize / 4;
 	wall6.worldX = 13;
 	wall6.worldY = 11;
 	map[11][13] = wall6;
-
+	/*
 	mapTile rock;
 	rock.typeX = 9 * spriteSize;
 	rock.typeY = 0;
@@ -353,6 +380,7 @@ void World::initMap(){
 	grave.worldX = 9;
 	grave.worldY = 6;
 	map[6][9] = grave;
+	*/
 }
 
 bool World::isTraversable(int x, int y){
@@ -467,6 +495,20 @@ mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffs
 		for (int j = 0; j < mapW; j++){
 			//map[i][j].selected = false;
 
+			int minCollisionX = map[i][j].screenX + (tileSize / 4);
+			int minCollisionY = map[i][j].screenY + ((tileSize / 8) * 3);
+
+			int maxCollisionX = minCollisionX + (tileSize / 2);
+			int maxCollisionY = minCollisionY + (tileSize / 4);
+
+			if (clickX >= minCollisionX + renderOffsetX && clickX < maxCollisionX + renderOffsetX){
+				if (clickY >= minCollisionY + renderOffsetY && clickY < maxCollisionY + renderOffsetY){
+					std::cout << "Click registered at" << j << "," << i << std::endl;
+					return map[i][j];
+				}
+			}
+
+			/*
 			if (clickX >= map[i][j].screenX + renderOffsetX && clickX < map[i][j].screenX + renderOffsetX + tileSize){
 				if (clickY >= map[i][j].screenY + renderOffsetY && clickY < map[i][j].screenY + renderOffsetY + tileSize){	
 					std::cout << "clicked at: " << j << ", " << i << std::endl;
@@ -479,6 +521,7 @@ mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffs
 					//map[5][4].selected = true;
 				}
 			}
+			*/
 		}
 	}
 	

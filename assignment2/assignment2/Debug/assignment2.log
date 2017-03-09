@@ -1,20 +1,48 @@
-﻿Build started 08/03/2017 18:56:23.
+﻿Build started 09/03/2017 22:21:28.
      1>Project "F:\Computing with Digital Media\Multimedia Design Applications\localRepo\assignment2\assignment2\assignment2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Character.cpp Game.cpp Input.cpp Main.cpp Renderer.cpp SDLUtils.cpp World.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Game.cpp Input.cpp Main.cpp Renderer.cpp SDLUtils.cpp UI.cpp World.cpp
          Game.cpp
      1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
                  f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
      1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
                  f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
-         Character.cpp
          Generating Code...
-         Skipping... (no relevant changes detected)
+         Compiling...
          World.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\world.cpp(414): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\world.cpp(457): warning C4018: '<' : signed/unsigned mismatch
+         UI.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
          SDLUtils.cpp
-         Input.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
          Renderer.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
          Main.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
+         Input.cpp
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
+         Generating Code...
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\world.cpp(529): warning C4715: 'World::getTile' : not all control paths return a value
        Link:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"F:\Computing with Digital Media\Multimedia Design Applications\localRepo\assignment2\Debug\assignment2.exe" /INCREMENTAL /NOLOGO SDL2.lib SDL2main.lib SDL2_image.lib SDL2_ttf.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"F:\Computing with Digital Media\Multimedia Design Applications\localRepo\assignment2\Debug\assignment2.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"F:\Computing with Digital Media\Multimedia Design Applications\localRepo\assignment2\Debug\assignment2.lib" /MACHINE:X86 Debug\Character.obj
          Debug\Game.obj
@@ -29,4 +57,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.30
+Time Elapsed 00:00:03.05
