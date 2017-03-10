@@ -383,6 +383,171 @@ void World::initMap(){
 	*/
 }
 
+void World::loadMap(char* path){
+	/*
+	std::ofstream myfile;
+	myfile.open(path);
+	myfile << "hello file";
+	myfile.close();
+	*/
+	std::string line;
+	std::ifstream myFile(path);
+
+	int i = 0;
+	int j = 0;
+	if (myFile.is_open()){
+		while (std::getline(myFile, line)){
+			mapTile newTile;
+			newTile.worldX = j;
+			newTile.worldY = i;
+			newTile.screenX = (newTile.worldX - newTile.worldY) * tileSize / 2;
+			newTile.screenY = (newTile.worldX + newTile.worldY) * tileSize / 4;
+			newTile.selected = false;
+			newTile.attackRange = false;
+			newTile.moveRange = false;
+
+			if (line == "1"){
+				//grass tile 0 is debug tile
+				newTile.typeX = 1 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "2"){
+				//path tile
+				newTile.typeX = 2 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "3"){
+				//path tile
+				newTile.typeX = 3 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "4"){
+				//path tile
+				newTile.typeX = 4 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "5"){
+				//path tile
+				newTile.typeX = 5 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "6"){
+				//path tile
+				newTile.typeX = 6 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "7"){
+				//path tile
+				newTile.typeX = 7 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "8"){
+				//path tile
+				newTile.typeX = 8 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "9"){
+				//path tile
+				newTile.typeX = 9 * spriteSize;
+				newTile.typeY = 0 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "10"){
+				//path tile
+				newTile.typeX = 0 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "11"){
+				//path tile
+				newTile.typeX = 1 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "12"){
+				//path tile
+				newTile.typeX = 2 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "13"){
+				//path tile
+				newTile.typeX = 3 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "14"){
+				//path tile
+				newTile.typeX = 4 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "15"){
+				//path tile
+				newTile.typeX = 5 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "16"){
+				//path tile
+				newTile.typeX = 6 * spriteSize;
+				newTile.typeY = 1 * spriteSize;
+				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == ""){
+				j = 0;
+				i += 1;
+			}
+			
+			
+		}
+		myFile.close();
+	}
+	else{
+		std::cout << "Could not open: " << path << std::endl;
+	}
+}
+
 bool World::isTraversable(int x, int y){
 	if (x >= 0){
 		if (x < mapW){
@@ -540,8 +705,4 @@ void World::clearAll(){
 			map[i][j].attackRange = false;
 		}
 	}
-}
-
-void World::loadMap(){
-
 }

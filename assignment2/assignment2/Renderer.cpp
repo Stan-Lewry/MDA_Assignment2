@@ -64,48 +64,6 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 			}
 		}
 	}
-
-	/*
-	for (int i = 0; i < mapH; i++){
-		for (int j = 0; j < mapW; j++){
-			dRect.x = map[i][j].screenX + renderOffsetX;
-			dRect.y = map[i][j].screenY + renderOffsetY;
-			sRect.x = map[i][j].typeX;
-			sRect.y = map[i][j].typeY;
-			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-
-			if (currentCharacter->getAttkRange() > currentCharacter->getMoveRange()){
-				if (map[i][j].moveRange){
-				sRect.y = 1 * spriteSize;
-				sRect.x = 9 * spriteSize;
-				SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-				else if (map[i][j].attackRange){
-					sRect.y = 1 * spriteSize;
-					sRect.x = 8 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-			}
-			else if (currentCharacter->getMoveRange() > currentCharacter->getAttkRange()){
-				if (map[i][j].moveRange){
-					sRect.y = 1 * spriteSize;
-					sRect.x = 9 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-				if (map[i][j].attackRange){
-					sRect.y = 1 * spriteSize;
-					sRect.x = 8 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-			}
-			if (map[i][j].selected){
-				sRect.y = 1 * spriteSize;
-				sRect.x = 7 * spriteSize;
-				SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-			}
-		}
-	}
-	*/
 }
 
 void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
@@ -136,19 +94,6 @@ void Renderer::renderMapBackground(){
 	SDL_Rect dRect = { 0, 0, screenW, screenH };
 	SDL_SetRenderDrawColor(rend, 102, 204, 255, 1);
 	SDL_RenderFillRect(rend, &dRect);
-
-	/*
-	SDL_Rect sRect = {0, 2 * spriteSize, spriteSize, spriteSize};
-	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
-	for (int i = 0; i < (screenH/ tileSize) + 2; i++){
-		for (int j = 0; j < screenW/ tileSize; j++){
-			dRect.x = j * tileSize;
-			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-		}
-		dRect.x = 0;
-		dRect.y = i * tileSize;
-	}
-	*/
 }
 SDL_Texture* Renderer::loadPNG(char path[]){
 	printf("loading: %s\n", path);

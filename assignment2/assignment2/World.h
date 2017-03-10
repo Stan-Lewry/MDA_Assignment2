@@ -2,7 +2,8 @@
 #define WORLD_HEADER
 
 #include "SDLUtils.h"
-
+#include <iostream>
+#include <fstream>
 
 class World{
 public:	
@@ -17,7 +18,7 @@ public:
 	void selectTile(int worldX, int worldY);
 	mapTile getTile(int clickX, int clickY, int renderOffsetX, int renderOffsetY);
 	void clearAll();
-	void loadMap();
+	void loadMap(char* path);
 
 	void setIsoScreenCoords(int x, int y);
 
@@ -29,3 +30,29 @@ private:
 
 
 #endif
+
+
+
+
+
+
+
+
+/*
+
+mapTile wall6;
+wall6.typeX = 6 * spriteSize;
+wall6.typeY = 1 * spriteSize;
+wall6.blocked = true;
+wall6.selected = false;
+wall6.moveRange = false;
+wall6.attackRange = false;
+
+wall6.screenX = (13 - 11) * tileSize / 2;
+wall6.screenY = (13 + 11) * tileSize / 4;
+wall6.worldX = 13;
+wall6.worldY = 11;
+map[11][13] = wall6;
+
+
+*/

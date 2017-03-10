@@ -6,7 +6,8 @@ Game::Game(){
 	globalRunning = sdlUtils->initSDL();
 	world = new World();
 	//world->initBlankMap();
-	world->initMap();
+	//world->initMap();
+	world->loadMap("Levels/newLevel01.level");
 	renderer = new Renderer(sdlUtils->rend);
 	ui = new UI();
 	initCharacters();
@@ -144,6 +145,7 @@ void Game::update(InputState inputState){
 
 
 void Game::gameLoop(){
+	//world->loadMap("Levels/test.level");
 	while (globalRunning){
 
 		oldTime = currentTime;
