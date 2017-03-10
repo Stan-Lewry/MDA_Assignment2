@@ -406,7 +406,14 @@ void World::loadMap(char* path){
 			newTile.attackRange = false;
 			newTile.moveRange = false;
 
-			if (line == "1"){
+			if (line == "0"){
+				newTile.typeX = 0;
+				newTile.typeY = 0;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "1"){
 				//grass tile 0 is debug tile
 				newTile.typeX = 1 * spriteSize;
 				newTile.typeY = 0 * spriteSize;
@@ -531,6 +538,110 @@ void World::loadMap(char* path){
 				newTile.typeX = 6 * spriteSize;
 				newTile.typeY = 1 * spriteSize;
 				newTile.blocked = false;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "20"){
+				//path tile
+				newTile.typeX = 0 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "21"){
+				//path tile
+				newTile.typeX = 1 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "22"){
+				//path tile
+				newTile.typeX = 2 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "23"){
+				//path tile
+				newTile.typeX = 3 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "24"){
+				//path tile
+				newTile.typeX = 4 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "25"){
+				//path tile
+				newTile.typeX = 5 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "26"){
+				//path tile
+				newTile.typeX = 6 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "27"){
+				//path tile
+				newTile.typeX = 7 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "28"){
+				//path tile
+				newTile.typeX = 8 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "29"){
+				//path tile
+				newTile.typeX = 9 * spriteSize;
+				newTile.typeY = 2 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "30"){
+				//path tile
+				newTile.typeX = 0 * spriteSize;
+				newTile.typeY = 3 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "31"){
+				//path tile
+				newTile.typeX = 1 * spriteSize;
+				newTile.typeY = 3 * spriteSize;
+				newTile.blocked = true;
+				map[i][j] = newTile;
+				j += 1;
+			}
+			else if (line == "32"){
+				//path tile
+				newTile.typeX = 2 * spriteSize;
+				newTile.typeY = 3 * spriteSize;
+				newTile.blocked = true;
 				map[i][j] = newTile;
 				j += 1;
 			}

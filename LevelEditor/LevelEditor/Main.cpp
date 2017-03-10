@@ -87,7 +87,7 @@ SDL_Texture* loadPNG(char* path){
 }
 
 void initTextures(){
-	tiles = loadPNG("Assets/tiles02.png");
+	tiles = loadPNG("Assets/2d_tiles.png");
 	ui = loadPNG("Assets/ui.png");
 }
 
@@ -200,6 +200,71 @@ void renderSelectedTile(){
 		sRect.y = 1 * spriteSize;
 		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
 		break;
+	case 20:
+		sRect.x = 0 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 21:
+		sRect.x = 1 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 22:
+		sRect.x = 2 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 23:
+		sRect.x = 3 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 24:
+		sRect.x = 4 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 25:
+		sRect.x = 5 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 26:
+		sRect.x = 6 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 27:
+		sRect.x = 7 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 28:
+		sRect.x = 8 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 29:
+		sRect.x = 9 * spriteSize;
+		sRect.y = 2 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 30:
+		sRect.x = 0 * spriteSize;
+		sRect.y = 3 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 31:
+		sRect.x = 1 * spriteSize;
+		sRect.y = 3 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
+	case 32:
+		sRect.x = 2 * spriteSize;
+		sRect.y = 3 * spriteSize;
+		SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+		break;
 	}
 }
 
@@ -282,6 +347,62 @@ void renderMap(){
 				sRect.x = 6 * spriteSize;
 				sRect.y = 1 * spriteSize;
 			}
+			if (map[i][j].type == 16){
+				sRect.x = 6 * spriteSize;
+				sRect.y = 1 * spriteSize;
+			}
+			if (map[i][j].type == 20){
+				sRect.x = 0 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 21){
+				sRect.x = 1 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 22){
+				sRect.x = 2 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 23){
+				sRect.x = 3 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 24){
+				sRect.x = 4 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 25){
+				sRect.x = 5 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 26){
+				sRect.x = 6 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 27){
+				sRect.x = 7 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 28){
+				sRect.x = 8 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 29){
+				sRect.x = 9 * spriteSize;
+				sRect.y = 2 * spriteSize;
+			}
+			if (map[i][j].type == 30){
+				sRect.x = 0 * spriteSize;
+				sRect.y = 3 * spriteSize;
+			}
+			if (map[i][j].type == 31){
+				sRect.x = 1 * spriteSize;
+				sRect.y = 3 * spriteSize;
+			}
+			if (map[i][j].type == 32){
+				sRect.x = 2 * spriteSize;
+				sRect.y = 3 * spriteSize;
+			}
 			dRect.x = map[i][j].screenX + renderOffsetX;
 			dRect.y = map[i][j].screenY + renderOffsetY;
 			SDL_RenderCopy(rend, tiles, &sRect, &dRect);
@@ -323,7 +444,7 @@ void selectTile(int inputX, int inputY){
 
 void exportMap(){
 	std::ofstream levelFile;
-	levelFile.open("newLevel01.level");
+	levelFile.open("newLevel02.level");
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
