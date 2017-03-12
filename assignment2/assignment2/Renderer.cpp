@@ -7,13 +7,14 @@ Renderer::Renderer(SDL_Renderer* _rend){
 	initTextures();
 }
 
-void Renderer::render(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter, UIElement renderableUIElements[1]){
+void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter, UIElement renderableUIElements[1], int mouseX, int mouseY){
 	SDL_RenderClear(rend);
 	renderMapBackground();
 	renderWorld(map, currentCharacter);
 	renderCharacters(renderableCharacters1);
 	renderCharacters(renderableCharacters2); 
 	renderUI(renderableUIElements, currentCharacter);
+	renderCursor(mouseX, mouseY);
 	SDL_RenderPresent(rend);
 }
 
@@ -95,6 +96,42 @@ void Renderer::renderMapBackground(){
 	SDL_SetRenderDrawColor(rend, 102, 204, 255, 1);
 	SDL_RenderFillRect(rend, &dRect);
 }
+
+
+void Renderer::renderCursor(int mouseX, int mouseY){
+	SDL_Rect sRect = { 300, 0, 64, 64 };
+	SDL_Rect dRect = { mouseX, mouseY, 32, 32 };
+	SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
+
+}
+
+
+void Renderer::renderMainMenu(UIElement renderableUIElements[4], int mouseX, int mouseY){
+	
+	SDL_RenderClear(rend);
+
+	SDL_Rect bgSource = { 0, 0, screenW, screenH };
+	SDL_Rect bgDest = { 0, 0, screenW, screenH };
+	SDL_RenderCopy(rend, titleScreen, &bgSource, &bgDest);
+
+	SDL_Rect sRect, dRect;
+	for (int i = 0; i < 4; i++){
+		if (renderableUIElements[i].hover){
+			sRect = { renderableUIElements[i].sourceX + 300, renderableUIElements[i].sourceY, renderableUIElements[i].width, renderableUIElements[i].height };
+		}
+		else{
+			sRect = { renderableUIElements[i].sourceX, renderableUIElements[i].sourceY, renderableUIElements[i].width, renderableUIElements[i].height };
+		}
+		dRect = { renderableUIElements[i].screenX, renderableUIElements[i].screenY, renderableUIElements[i].width, renderableUIElements[i].height };
+		SDL_RenderCopy(rend, mainMenuButtons, &sRect, &dRect);
+	}
+	
+	renderCursor(mouseX, mouseY);
+
+	SDL_RenderPresent(rend);
+}
+
+
 SDL_Texture* Renderer::loadPNG(char path[]){
 	printf("loading: %s\n", path);
 	SDL_Surface* tempSurface = IMG_Load(path);
@@ -108,6 +145,8 @@ void Renderer::initTextures(){
 	worldSpriteSheet = loadPNG("Assets/iso_tiles.png");
 	characterSpriteSheet = loadPNG("Assets/characters_large.png");
 	uiSpriteSheet = loadPNG("Assets/ui.png");
+	titleScreen = loadPNG("Assets/title_screen.png");
+	mainMenuButtons = loadPNG("Assets/main_menu_buttons.png");
 }
 
 int Renderer::getRenderOffsetX(){

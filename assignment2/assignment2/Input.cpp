@@ -6,6 +6,9 @@ Input::Input(){
 
 void Input::handleEvents(){
 	inputState = { false, 0, 0, false, false, false, false, false, false };
+
+	SDL_GetMouseState(&inputState.mouseX, &inputState.mouseY);
+
 	while (SDL_PollEvent(&evnt)){
 		switch (evnt.type){
 		case SDL_QUIT:
@@ -13,7 +16,7 @@ void Input::handleEvents(){
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			inputState.mouseButtonDown = true;
-			SDL_GetMouseState(&inputState.mouseX, &inputState.mouseY);
+			//SDL_GetMouseState(&inputState.mouseX, &inputState.mouseY);
 			break;
 		case SDL_KEYDOWN:
 			switch (evnt.key.keysym.sym){

@@ -17,6 +17,7 @@ public:
 	void initCharacters();
 	bool selectCharacter(int mouseX, int mouseY);
 	void update(InputState inputState);
+	void changeState(GameState newState);
 	void switchCharacterLists();
 	void getRanges(Character* c);
 	void endTurn();
@@ -40,11 +41,15 @@ private:
 	Character* selectedCharacter;
 
 	bool globalRunning;
+	
+
+	GameState currentState = MAINMENU;
+	
 	SDL_Texture* mapTileTexture = NULL;
 	
 	int spriteSize = 32;
 	//SDL_Event evnt;
-	int tileSize = 64;
+	int tileSize = 128;
 
 	int scrollSpeed = 30;
 	

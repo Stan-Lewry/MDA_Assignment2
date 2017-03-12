@@ -25,7 +25,7 @@ public:
 private:
 
 	int spriteSize = 64;
-	int tileSize = 64;
+	int tileSize = 128;
 };
 
 

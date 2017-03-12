@@ -2,6 +2,7 @@
 
 bool SDLUtils::initSDL(){
 	SDL_Init(SDL_INIT_EVERYTHING);
+
 	TTF_Init();
 	IMG_Init(IMG_INIT_PNG);
 	window = SDL_CreateWindow("Assignment 2", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenW, screenH, SDL_WINDOW_SHOWN);

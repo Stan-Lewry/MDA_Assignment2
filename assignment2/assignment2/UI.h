@@ -6,11 +6,18 @@
 class UI{
 public:
 	UI();
-	void initElements();
+	void initGameplayElements();
+
+	void initMainMenuElements();
+
 	UIElement* getElementList();
 
+	UIAction getAction(int mouseX, int mouseY);
+
+	void hover(int mouseX, int mouseY);
+
 private:
-	UIElement elements[1];
+	UIElement elements[4];
 };
 
 #endif

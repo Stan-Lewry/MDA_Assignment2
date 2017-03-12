@@ -49,7 +49,10 @@ struct mapTile{
 	//bool rangedAttackRange
 };
 
-enum UIAction{ A, B, C };
+enum UIAction{NO_ACTION, A, B, C , CHANGESTATE_GAMEPLAY, QUIT};
+enum GameState{MAINMENU, LEVELSELECT, GAMEPLAY};
+
+
 
 struct UIElement{
 	int screenX;
@@ -58,6 +61,8 @@ struct UIElement{
 	int height;
 	int sourceX;
 	int sourceY;
+	//int animationFrame;
+	bool hover;
 	UIAction action;
 };
 

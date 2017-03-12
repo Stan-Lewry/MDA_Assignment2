@@ -3,8 +3,8 @@
 Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _spriteID, Profession _profession, char* _name) {
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = (worldX - worldY) * 64 / 2;
-	screenY = (worldX + worldY) * 64 / 4;
+	screenX = (worldX - worldY) * 128 / 2;
+	screenY = (worldX + worldY) * 128 / 4;
 	spriteID = _spriteID;
 	name = _name;
 	selected = false;
@@ -145,8 +145,8 @@ bool Character::isDead(){
 
 bool Character::clickedOn(int x, int y, int rendererOffsetX, int rendererOffsetY){
 	std::cout << "character->clickedOn" << std::endl;
-	if (x >= screenX + rendererOffsetX && x < screenX + rendererOffsetX + 64){
-		if (y >= screenY + rendererOffsetY && y < screenY + rendererOffsetY + 64){
+	if (x >= screenX + rendererOffsetX && x < screenX + rendererOffsetX + 128){
+		if (y >= screenY + rendererOffsetY && y < screenY + rendererOffsetY + 128){
 			return true;
 		}
 		else return false;
@@ -159,8 +159,8 @@ void Character::moveTo(int _worldX, int _worldY){
 	std::cout << "moving character to" << _worldX << "," << _worldY << std::endl;
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = (worldX - worldY) * 64 / 2;
-	screenY = (worldX + worldY) * 64 / 4;
+	screenX = (worldX - worldY) * 128 / 2;
+	screenY = (worldX + worldY) * 128 / 4;
 	movePoints -= 1;
 	//attkPoints -= 1; //TEMPORARY _ FOR TESTING PURPOSES ONLY
 }

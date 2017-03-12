@@ -7,9 +7,10 @@ Game::Game(){
 	world = new World();
 	//world->initBlankMap();
 	//world->initMap();
-	world->loadMap("Levels/newLevel03.level");
+	world->loadMap("Levels/newLevel02.level");
 	renderer = new Renderer(sdlUtils->rend);
 	ui = new UI();
+	ui->initMainMenuElements();
 	initCharacters();
 	selectedCharacter = activeCharacterList[0];
 }
@@ -52,16 +53,6 @@ bool Game::selectCharacter(int mouseX, int mouseY){
 }
 
 void Game::getRanges(Character* c){
-	/*
-	if (c->getAttkRange() > c->getMoveRange()){
-		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
-		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
-	}
-	else{
-		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
-		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
-	}
-	*/
 
 	if (c->getMovePoints() > 0){
 		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
@@ -76,76 +67,109 @@ void Game::update(InputState inputState){
 	if (inputState.quit){
 		globalRunning = false;
 	}
-	else if (inputState.mouseButtonDown){
-		mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(),renderer->getRanderOffsetY() );
 
-		if (selectedCharacter == NULL){
-			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
-				world->clearAll();
-				getRanges(selectedCharacter);
-			}
-			else{
-				world->clearAll();
-				world->selectTile(selectedTile.worldX, selectedTile.worldY);
-			}
-		}
-		else if (selectedCharacter != NULL){
-			if (selectCharacter(inputState.mouseX, inputState.mouseY)){
-				world->clearAll();
-				getRanges(selectedCharacter);
-			}
-			else if (selectedTile.moveRange){
-				world->clearAll();
-				if (selectedCharacter->getMovePoints() > 0){
-					selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
-					if (selectedCharacter->getMovePoints() > 0){
-						getRanges(selectedCharacter);
-					}
-					
+	if (currentState == GAMEPLAY){
+		if (inputState.mouseButtonDown){
+			mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(),renderer->getRanderOffsetY() );
+				
+			if (selectedCharacter == NULL){
+				if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+					world->clearAll();
+					getRanges(selectedCharacter);
 				}
+				else{
+					world->clearAll();
+					world->selectTile(selectedTile.worldX, selectedTile.worldY);
+				}
+			}
+			else if (selectedCharacter != NULL){
+				if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+					world->clearAll();
+					getRanges(selectedCharacter);
+				}
+				else if (selectedTile.moveRange){
+					world->clearAll();
+					if (selectedCharacter->getMovePoints() > 0){
+						selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
+						if (selectedCharacter->getMovePoints() > 0){
+							getRanges(selectedCharacter);
+						}
+						
+					}
 
-				//getRanges(selectedCharacter);
+					//getRanges(selectedCharacter);
+				}
+				else{
+					world->clearAll();
+					world->selectTile(selectedTile.worldX, selectedTile.worldY);
+				}
 			}
-			else{
-				world->clearAll();
-				world->selectTile(selectedTile.worldX, selectedTile.worldY);
-			}
-		}
 		
-	}
+		}
 	
-	else if (inputState.space){
-		endTurn();
-	}
-
-	if (inputState.up){
-		renderer->addOffsetY(scrollSpeed);
-	}
-	if (inputState.down){
-		renderer->addOffsetY(-scrollSpeed);
-	}
-	if (inputState.left){
-		renderer->addOffsetX(scrollSpeed);
-	}
-	if (inputState.right){
-		renderer->addOffsetX(-scrollSpeed);
-	}
-
-	for (int i = 0; i < teamSize; i++){
-		if (!activeCharacterList[i]->isIdle() && activeCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1 ){
-			activeCharacterList[i]->setIdle(true);
+		else if (inputState.space){
+			endTurn();
 		}
-		if (!inactiveCharacterList[i]->isIdle() && inactiveCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1){
-			inactiveCharacterList[i]->setIdle(true);
+
+		if (inputState.up){
+			renderer->addOffsetY(scrollSpeed);
 		}
+		if (inputState.down){
+			renderer->addOffsetY(-scrollSpeed);
+		}
+		if (inputState.left){
+			renderer->addOffsetX(scrollSpeed);
+		}
+		if (inputState.right){
+			renderer->addOffsetX(-scrollSpeed);
+		}
+
+		for (int i = 0; i < teamSize; i++){
+			if (!activeCharacterList[i]->isIdle() && activeCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1 ){
+				activeCharacterList[i]->setIdle(true);
+			}
+			if (!inactiveCharacterList[i]->isIdle() && inactiveCharacterList[i]->getMovePoints() < 1 && activeCharacterList[i]->getAttkPoints() < 1){
+				inactiveCharacterList[i]->setIdle(true);
+			}
+		}
+	}
+	else if (currentState == MAINMENU){
+
+		ui->hover(input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
+
+		if (input->getCurrentInputState().mouseButtonDown){
+			if (ui->getAction(input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY) == CHANGESTATE_GAMEPLAY){
+				changeState(GAMEPLAY);
+			}
+			else if (ui->getAction(input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY) == QUIT){
+				globalRunning = false;
+			}
+		}
+
 	}
 	
 }
 
 
+void Game::changeState(GameState newState){
+	if (newState == GAMEPLAY){
+		ui->initGameplayElements();
+		currentState = GAMEPLAY;
+	}
+	else if (newState == MAINMENU){
+		//do the shit when needed;
+	}
+}
+
 
 void Game::gameLoop(){
 	//world->loadMap("Levels/test.level");
+
+
+	//ui->initGameplayElements();
+
+
+
 	while (globalRunning){
 
 		oldTime = currentTime;
@@ -164,7 +188,11 @@ void Game::gameLoop(){
 		input->handleEvents();
 		update(input->getCurrentInputState()); 
 		//renderMap();
-		renderer->render(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter, ui->getElementList());
-		
+		if (currentState == GAMEPLAY){
+			renderer->renderGame(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter, ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
+		}
+		else if (currentState == MAINMENU){
+			renderer->renderMainMenu(ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
+		}
 	}
 }
