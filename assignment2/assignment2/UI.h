@@ -17,7 +17,7 @@ public:
 	void hover(int mouseX, int mouseY);
 
 private:
-	UIElement elements[4];
+	UIElement elements[7];
 };
 
 #endif

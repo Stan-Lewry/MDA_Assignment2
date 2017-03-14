@@ -15,7 +15,14 @@ public:
 
 	
 	void initCharacters();
-	bool selectCharacter(int mouseX, int mouseY);
+	bool selectFriendlyCharacter(int mouseX, int mouseY);
+	bool selectTargetCharacter(int mouseX, int mouseY);
+
+	bool characterInThatPosition(int worldX, int worldY);
+
+	void attack(int mouseX, int mouseY);
+
+	void doCombat(Character* friendly, Character* target);
 	void update(InputState inputState);
 	void changeState(GameState newState);
 	void switchCharacterLists();
@@ -38,7 +45,8 @@ private:
 	World* world;
 	Character* activeCharacterList[teamSize];
 	Character* inactiveCharacterList[teamSize];
-	Character* selectedCharacter;
+	Character* selectedFriendlyCharacter;
+	Character* selectedTargetCharacter;
 
 	bool globalRunning;
 	
@@ -49,7 +57,7 @@ private:
 	
 	int spriteSize = 32;
 	//SDL_Event evnt;
-	int tileSize = 128;
+	int tileSize = 64;
 
 	int scrollSpeed = 30;
 	

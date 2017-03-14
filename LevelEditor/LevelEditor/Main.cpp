@@ -94,7 +94,7 @@ void initTextures(){
 void initMap(){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
-			tile newTile = { j, i, j * tileSize, i * tileSize, 0 };
+			tile newTile = { j, i, j * tileSize, i * tileSize, 1 };
 			map[i][j] = newTile;
 		}
 	}
@@ -444,7 +444,7 @@ void selectTile(int inputX, int inputY){
 
 void exportMap(){
 	std::ofstream levelFile;
-	levelFile.open("newLevel02.level");
+	levelFile.open("newLevel05.level");
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
@@ -458,7 +458,7 @@ void exportMap(){
 void clearMap(){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
-			map[i][j].type = 0;
+			map[i][j].type = 1;
 		}
 	}
 }

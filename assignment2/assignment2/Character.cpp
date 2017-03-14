@@ -3,8 +3,8 @@
 Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _spriteID, Profession _profession, char* _name) {
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = (worldX - worldY) * 128 / 2;
-	screenY = (worldX + worldY) * 128 / 4;
+	screenX = (worldX - worldY) * 64 / 2;
+	screenY = (worldX + worldY) * 64 / 4;
 	spriteID = _spriteID;
 	name = _name;
 	selected = false;
@@ -17,7 +17,9 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 	case KNIGHT:
 		hp = 100;
 		movePoints = 1;
+		maxMovePoints = 1;
 		attkPoints = 1;
+		maxAttkPoints = 1;
 		moveRange = 2;
 		attkRange = 1;
 
@@ -27,7 +29,9 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 	case WIZARD:
 		hp = 70;
 		movePoints = 1;
+		maxMovePoints = 1;
 		attkPoints = 2;
+		maxAttkPoints = 2;
 		moveRange = 3;
 		attkRange = 5;
 
@@ -37,7 +41,9 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 	case FIGHTER:
 		hp = 50;
 		movePoints = 2;
+		maxMovePoints = 2;
 		attkPoints = 1;
+		maxAttkPoints = 1;
 		moveRange = 5;
 		attkRange = 1;
 
@@ -133,6 +139,15 @@ void Character::setIdle(bool i){
 
 }
 
+void Character::reset(){
+	movePoints = maxMovePoints;
+	attkPoints = maxAttkPoints;
+	
+	if(!dead) animationFrame = 2;
+
+	idle = false;
+}
+
 
 void Character::setDead(bool d){
 	dead = d;
@@ -144,9 +159,9 @@ bool Character::isDead(){
 }
 
 bool Character::clickedOn(int x, int y, int rendererOffsetX, int rendererOffsetY){
-	std::cout << "character->clickedOn" << std::endl;
-	if (x >= screenX + rendererOffsetX && x < screenX + rendererOffsetX + 128){
-		if (y >= screenY + rendererOffsetY && y < screenY + rendererOffsetY + 128){
+	if (x >= screenX + rendererOffsetX && x < screenX + rendererOffsetX + 64){
+		if (y >= screenY + rendererOffsetY && y < screenY + rendererOffsetY + 64){
+			printf("clicked on character\n");
 			return true;
 		}
 		else return false;
@@ -159,8 +174,19 @@ void Character::moveTo(int _worldX, int _worldY){
 	std::cout << "moving character to" << _worldX << "," << _worldY << std::endl;
 	worldX = _worldX;
 	worldY = _worldY;
-	screenX = (worldX - worldY) * 128 / 2;
-	screenY = (worldX + worldY) * 128 / 4;
+	screenX = (worldX - worldY) * 64 / 2;
+	screenY = (worldX + worldY) * 64 / 4;
 	movePoints -= 1;
 	//attkPoints -= 1; //TEMPORARY _ FOR TESTING PURPOSES ONLY
+}
+
+void Character::doDamage(int dmg){
+	if (hp - dmg <= 0){
+		hp = 0;
+		dead = true;
+		animationFrame = 0;
+	}
+	else{
+		hp -= dmg;
+	}
 }

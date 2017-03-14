@@ -17,6 +17,7 @@ public:
 	void checkAttackRange(int attackDist, int originX, int originY);
 	void selectTile(int worldX, int worldY);
 	mapTile getTile(int clickX, int clickY, int renderOffsetX, int renderOffsetY);
+	mapTile getTileWorldCoords(int worldX, int worldY);
 	void clearAll();
 	void loadMap(char* path);
 
@@ -25,7 +26,7 @@ public:
 private:
 
 	int spriteSize = 64;
-	int tileSize = 128;
+	int tileSize = 64;
 };
 
 

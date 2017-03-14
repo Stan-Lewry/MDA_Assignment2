@@ -32,9 +32,14 @@ public:
 	bool isIdle();
 	void setIdle(bool i);
 	
+	void reset();
+
 	void moveTo(int _worldX, int _worldY);
 
 	bool clickedOn(int x, int y, int renderOffsetX, int renderOffsetY);
+
+	void doDamage(int dmg);
+
 
 	void setDead(bool d);
 	bool isDead();
@@ -61,9 +66,9 @@ private:
 	int attkPoints;
 	int maxAttkPoints;
 	int moveRange;
-	int maxMoveRange;
+	//int maxMoveRange;
 	int attkRange;
-	int maxAttkRange;
+	//int maxAttkRange;
 
 	int armour;
 	int attk;

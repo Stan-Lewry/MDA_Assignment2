@@ -45,7 +45,7 @@ private:
 	SDL_Texture* titleScreen;
 	SDL_Texture* mainMenuButtons;
 	int spriteSize = 64;
-	int tileSize = 128;
+	int tileSize = 64;
 	int renderOffsetX = 760;
 	int renderOffsetY = 100;
 

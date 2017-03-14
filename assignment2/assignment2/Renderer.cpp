@@ -30,33 +30,35 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 			sRect.y = map[i][j].typeY;
 			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect); 
 
+			if (currentCharacter != NULL){
+				if (currentCharacter->getAttkRange() > currentCharacter->getMoveRange()){
+					if (map[i][j].moveRange){
 
-			if (currentCharacter->getAttkRange() > currentCharacter->getMoveRange()){
-				if (map[i][j].moveRange){
-
-					sRect.y = 1 * spriteSize;
-					sRect.x = 9 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+						sRect.y = 1 * spriteSize;
+						sRect.x = 9 * spriteSize;
+						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+					}
+					else if (map[i][j].attackRange){
+	
+						sRect.y = 1 * spriteSize;
+						sRect.x = 8 * spriteSize;
+						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+					}
 				}
-				else if (map[i][j].attackRange){
-
-					sRect.y = 1 * spriteSize;
-					sRect.x = 8 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+				else if (currentCharacter->getAttkRange() < currentCharacter->getMoveRange()){
+					if (map[i][j].moveRange){
+						sRect.y = 1 * spriteSize;
+						sRect.x = 9 * spriteSize;
+						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+					}
+					if (map[i][j].attackRange){
+						sRect.y = 1 * spriteSize;
+						sRect.x = 8 * spriteSize;
+						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
+					}
 				}
 			}
-			else if (currentCharacter->getAttkRange() < currentCharacter->getMoveRange()){
-				if (map[i][j].moveRange){
-					sRect.y = 1 * spriteSize;
-					sRect.x = 9 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-				if (map[i][j].attackRange){
-					sRect.y = 1 * spriteSize;
-					sRect.x = 8 * spriteSize;
-					SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
-				}
-			}
+
 
 			if (map[i][j].selected){
 				sRect.y = 1 * spriteSize;
@@ -79,15 +81,18 @@ void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
 void Renderer::renderUI(UIElement renderableUIElements[1], Character* currentCharacter){
 	SDL_Rect sRect;
 	SDL_Rect dRect;
-	for (int i = 0; i < 1; i++){
+	for (int i = 0; i < 7; i++){
 		sRect = { renderableUIElements[i].sourceX, renderableUIElements[i].sourceY, renderableUIElements[i].width, renderableUIElements[i].height };
 		dRect = { renderableUIElements[i].screenX, renderableUIElements[i].screenY, renderableUIElements[i].width, renderableUIElements[i].height };
 		SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
 	}
 
-	sRect = { 2 * spriteSize, currentCharacter->getSpriteID() * spriteSize, spriteSize, spriteSize };
-	dRect = { 75, 70, 150, 150 };
-	SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+	if (currentCharacter != NULL){
+		sRect = { 2 * spriteSize, currentCharacter->getSpriteID() * spriteSize, spriteSize, spriteSize };
+		dRect = { 75, 70, 150, 150 };
+		SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+	}
+
 }
 
 

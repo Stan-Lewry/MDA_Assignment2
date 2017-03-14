@@ -405,6 +405,7 @@ void World::loadMap(char* path){
 			newTile.selected = false;
 			newTile.attackRange = false;
 			newTile.moveRange = false;
+			newTile.exists = true; 
 
 			if (line == "0"){
 				newTile.typeX = 0;
@@ -764,6 +765,8 @@ void World::checkAttackRange(int attackDist, int originX, int originY){
 	}
 }
 
+
+
 mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffsetY){
 
 
@@ -801,7 +804,14 @@ mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffs
 		}
 	}
 	
+	mapTile nullTile;
+	nullTile.exists = false;
+	return nullTile;
 
+}
+
+mapTile World::getTileWorldCoords(int worldX, int worldY){
+	return map[worldY][worldX];
 }
 
 void World::selectTile(int worldX, int worldY){

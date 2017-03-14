@@ -46,8 +46,11 @@ struct mapTile{
 	bool selected;
 	bool moveRange;
 	bool attackRange;
+	bool exists;
 	//bool rangedAttackRange
 };
+
+
 
 enum UIAction{NO_ACTION, A, B, C , CHANGESTATE_GAMEPLAY, QUIT};
 enum GameState{MAINMENU, LEVELSELECT, GAMEPLAY};

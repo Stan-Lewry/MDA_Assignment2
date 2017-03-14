@@ -7,23 +7,24 @@ Game::Game(){
 	world = new World();
 	//world->initBlankMap();
 	//world->initMap();
-	world->loadMap("Levels/newLevel02.level");
+	world->loadMap("Levels/newLevel04.level");
 	renderer = new Renderer(sdlUtils->rend);
 	ui = new UI();
 	ui->initMainMenuElements();
 	initCharacters();
-	selectedCharacter = activeCharacterList[0];
+	selectedFriendlyCharacter = NULL;
+	selectedTargetCharacter = NULL;
 }
 
 
 void Game::initCharacters(){
-	activeCharacterList[0] = new Character(2, 7, 2 * tileSize, 7 * tileSize, 0, KNIGHT, "Blue Knight");
-	activeCharacterList[1] = new Character(3, 2, 3 * tileSize, 2 * tileSize,  2, WIZARD, "Blue Wizard");
-	activeCharacterList[2] = new Character(2, 13, 2 * tileSize, 13 * tileSize, 4, FIGHTER, "Blue Fighter");
+	activeCharacterList[0] = new Character(0, 6, 0 * tileSize, 6 * tileSize, 0, KNIGHT, "Blue Knight");
+	activeCharacterList[1] = new Character(0, 7, 0 * tileSize, 7 * tileSize,  2, WIZARD, "Blue Wizard");
+	activeCharacterList[2] = new Character(0, 8, 0 * tileSize, 8 * tileSize, 4, FIGHTER, "Blue Fighter");
 
-	inactiveCharacterList[0] = new Character(13, 6, 13 * tileSize, 6 * tileSize, 1, KNIGHT, "Red Knight");
-	inactiveCharacterList[1] = new Character(12, 13, 12 * tileSize, 13 * tileSize, 3, WIZARD, "Red Wizard");
-	inactiveCharacterList[2] = new Character(9, 12, 9 * tileSize, 12 * tileSize, 5, FIGHTER, "Red Fighter");
+	inactiveCharacterList[0] = new Character(14, 6, 14 * tileSize, 6 * tileSize, 1, KNIGHT, "Red Knight");
+	inactiveCharacterList[1] = new Character(14, 7, 14 * tileSize, 7 * tileSize, 3, WIZARD, "Red Wizard");
+	inactiveCharacterList[2] = new Character(14, 8, 14 * tileSize, 8 * tileSize, 5, FIGHTER, "Red Fighter");
 }
 
 void Game::switchCharacterLists(){ //NEEDS FIXING
@@ -35,31 +36,78 @@ void Game::switchCharacterLists(){ //NEEDS FIXING
 
 void Game::endTurn(){
 	for (int i = 0; i < teamSize; i++){
-		activeCharacterList[i]->setIdle(false);
-		inactiveCharacterList[i]->setIdle(false);
+		activeCharacterList[i]->reset();
+		inactiveCharacterList[i]->reset();
 	}
 	switchCharacterLists();
+	selectedFriendlyCharacter = NULL;
+	selectedTargetCharacter = NULL;
 	world->clearAll();
 }
 
-bool Game::selectCharacter(int mouseX, int mouseY){
+bool Game::selectFriendlyCharacter(int mouseX, int mouseY){
 	for (int i = 0; i < teamSize; i++){
 		if (activeCharacterList[i]->clickedOn(mouseX, mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY()) && activeCharacterList[i]->isDead() == false){
-			selectedCharacter = activeCharacterList[i];
+			selectedFriendlyCharacter = activeCharacterList[i];
 			return true;
 		}
 	}
 	return false;
 }
 
+bool Game::selectTargetCharacter(int mouseX, int mouseY){
+	for (int i = 0; i < teamSize; i++){
+		if (inactiveCharacterList[i]->clickedOn(mouseX, mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY())){
+			selectedTargetCharacter = inactiveCharacterList[i];
+			printf("YOU CLICKED ON AN EMEMY\n");
+			return true;
+		}
+	}
+	return false;
+}
+
+void Game::doCombat(Character* friendly, Character* target){
+	//printf("DID SOME COMBAT\n");
+	//printf(target->getName());
+	//printf("\n");
+	
+	int dmg = 1000000;
+
+	printf(friendly->getName());
+	printf(" did damage to ");
+	printf(target->getName());
+	printf("\n");
+
+	target->doDamage(dmg);
+	friendly->setAttkPoints(-1);
+}
+
 void Game::getRanges(Character* c){
 
+	world->clearAll(); //??????
+	
 	if (c->getMovePoints() > 0){
 		world->checkMovementRange(c->getMoveRange(), c->getWorldX(), c->getWorldY());
 	}
 	if (c->getAttkPoints() > 0){
 		world->checkAttackRange(c->getAttkRange(), c->getWorldX(), c->getWorldY());
 	}
+}
+
+bool Game::characterInThatPosition(int worldX, int worldY){
+	for (int i = 0; i < teamSize; i++){
+		if (activeCharacterList[i]->getWorldX() == worldX){
+			if (activeCharacterList[i]->getWorldY() == worldY){
+				return true;
+			}
+		}
+		if (inactiveCharacterList[i]->getWorldX() == worldX){
+			if (inactiveCharacterList[i]->getWorldY() == worldY){
+				return true;
+			}
+		}
+	}
+	return false;
 }
 
 void Game::update(InputState inputState){
@@ -69,30 +117,32 @@ void Game::update(InputState inputState){
 	}
 
 	if (currentState == GAMEPLAY){
+		
+		/*
 		if (inputState.mouseButtonDown){
 			mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(),renderer->getRanderOffsetY() );
 				
-			if (selectedCharacter == NULL){
-				if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+			if (selectedFriendlyCharacter == NULL){
+				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
 					world->clearAll();
-					getRanges(selectedCharacter);
+					getRanges(selectedFriendlyCharacter);
 				}
 				else{
 					world->clearAll();
 					world->selectTile(selectedTile.worldX, selectedTile.worldY);
 				}
 			}
-			else if (selectedCharacter != NULL){
-				if (selectCharacter(inputState.mouseX, inputState.mouseY)){
+			else if (selectedFriendlyCharacter != NULL){
+				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
 					world->clearAll();
-					getRanges(selectedCharacter);
+					getRanges(selectedFriendlyCharacter);
 				}
 				else if (selectedTile.moveRange){
 					world->clearAll();
-					if (selectedCharacter->getMovePoints() > 0){
-						selectedCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
-						if (selectedCharacter->getMovePoints() > 0){
-							getRanges(selectedCharacter);
+					if (selectedFriendlyCharacter->getMovePoints() > 0){
+						selectedFriendlyCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
+						if (selectedFriendlyCharacter->getMovePoints() > 0){
+							getRanges(selectedFriendlyCharacter);
 						}
 						
 					}
@@ -104,10 +154,82 @@ void Game::update(InputState inputState){
 					world->selectTile(selectedTile.worldX, selectedTile.worldY);
 				}
 			}
+			
+
+
+
+
 		
 		}
-	
-		else if (inputState.space){
+	*/
+		
+		if (selectedFriendlyCharacter == NULL){
+			if (inputState.mouseButtonDown){
+				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
+					
+					getRanges(selectedFriendlyCharacter);
+				}
+			}
+		}
+		else if (selectedFriendlyCharacter != NULL){
+			if (inputState.mouseButtonDown){
+				mapTile clickedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY());
+				if (clickedTile.exists){
+					if (clickedTile.moveRange){
+						if (selectedFriendlyCharacter->getMovePoints() > 0){
+							if (!characterInThatPosition(clickedTile.worldX, clickedTile.worldY)){
+								printf("move to\n");
+								selectedFriendlyCharacter->moveTo(clickedTile.worldX, clickedTile.worldY);
+							}
+							else printf("that position is blocked\n");
+						}
+					}
+				}
+				if (selectTargetCharacter(inputState.mouseX, inputState.mouseY)){
+					if (selectedFriendlyCharacter->getAttkPoints() > 0){
+						//mapTile enemyPosition = world->getTile(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY(), renderer->getRenderOffsetX(), renderer->getRanderOffsetY());
+						//mapTile enemyPosition = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY());
+						mapTile enemyPosition = world->getTileWorldCoords(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY());
+						if (enemyPosition.attackRange == true){
+							doCombat(selectedFriendlyCharacter, selectedTargetCharacter);
+						}
+						//if (world->getTile(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY(), renderer->getRenderOffsetX(), renderer->getRanderOffsetY()).attackRange == true){
+						//	doCombat(selectedFriendlyCharacter, selectedTargetCharacter);
+						//}
+					}
+				}
+
+				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
+					getRanges(selectedFriendlyCharacter);
+				}
+			}
+		}
+
+		/*
+		
+		if no character selected
+			get click
+			if click is on a friendly character
+				that character is currently selected
+				if attack & move points > 0
+					display there ranges
+
+		if a character is selected
+			get click
+			if that click is on a tile thats in move range
+				if move points > 0
+					if that tile is not the another characrers x/y
+						move character to that tile
+			if that click is on an enemy character
+				if attack points > 0
+					if that char is in attack range
+						attack that character --- perhaps show a menu?
+			if that click is on a friendly character
+				select that character
+		*/
+
+
+		if (inputState.space){
 			endTurn();
 		}
 
@@ -189,7 +311,7 @@ void Game::gameLoop(){
 		update(input->getCurrentInputState()); 
 		//renderMap();
 		if (currentState == GAMEPLAY){
-			renderer->renderGame(world->map, activeCharacterList, inactiveCharacterList, selectedCharacter, ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
+			renderer->renderGame(world->map, activeCharacterList, inactiveCharacterList, selectedFriendlyCharacter, ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
 		}
 		else if (currentState == MAINMENU){
 			renderer->renderMainMenu(ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
