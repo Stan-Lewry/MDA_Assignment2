@@ -5,6 +5,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <iostream>
+#include <sstream>
 #include <vector>
 #include <string>
 #include <algorithm>
@@ -40,6 +41,7 @@ struct mapTile{
 	int screenY;
 	int worldX;
 	int worldY;
+	int worldZ;
 	int typeX;
 	int typeY;
 	bool blocked;

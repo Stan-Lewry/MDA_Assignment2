@@ -16,9 +16,10 @@ public:
 		Character* renderableCharacters2[teamSize], Character* currentCharacter, 
 		UIElement renderableUIElements[1], AnimationObject* animationObject, int mousex, int mouseY);
 
-	void renderCharacters(Character* renderableCharacters[teamSize]);
+	void renderCharacters(Character* renderableCharacters[teamSize], mapTile map[mapW][mapH]);
+	void renderStatusBars(Character* renderableCharacters[teamSize]);
 	void renderUI(UIElement renderableUIElements[1], Character* currentCharacter);
-	void renderWorld(mapTile map[mapH][mapW], Character* currentCharacter);
+	void renderWorld(mapTile map[mapH][mapW], Character* currentCharacter, Character* charList1[teamSize], Character* charList2[teamSize]);
 	void renderMapBackground();
 	void renderCursor(int mouseX, int mouseY);
 	void renderText(const char* text, TTF_Font* font, int x, int y, int r, int g, int b);

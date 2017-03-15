@@ -384,12 +384,271 @@ void World::initMap(){
 }
 
 void World::loadMap(char* path){
-	/*
+	std::string line;
+	std::fstream levelFile(path);
+
+	int i = 0;
+	int j = 0;
+	
+	//int lineCount = (mapH * mapW) * 2;
+	int counter = 0;
+	//for (counter = 0; counter < mapW * mapH)
+	//bool reading = true;
+
+	for (counter = 0; counter < mapW * mapH; counter++){
+		
+		//initialize blank tile
+		mapTile newTile;
+		newTile.worldX = j;
+		newTile.worldY = i;
+		newTile.worldZ = 0;
+		newTile.screenX = (newTile.worldX - newTile.worldY) * tileSize / 2;
+		newTile.screenY = (newTile.worldX + newTile.worldY) * tileSize / 4;
+		newTile.selected = false;
+		newTile.attackRange = false;
+		newTile.moveRange = false;
+		newTile.exists = true;
+		
+		//get first line - tile type
+		std::getline(levelFile, line);
+
+		//assigne tile type
+		if (line == "0"){
+			newTile.typeX = 0;
+			newTile.typeY = 0;
+			newTile.blocked = true;
+
+		}
+		else if (line == "1"){
+			//grass tile 0 is debug tile
+			newTile.typeX = 1 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "2"){
+			//path tile
+			newTile.typeX = 2 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "3"){
+			//path tile
+			newTile.typeX = 3 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "4"){
+			//path tile
+			newTile.typeX = 4 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "5"){
+			//path tile
+			newTile.typeX = 5 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "6"){
+			//path tile
+			newTile.typeX = 6 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "7"){
+			//path tile
+			newTile.typeX = 7 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "8"){
+			//path tile
+			newTile.typeX = 8 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "9"){
+			//path tile
+			newTile.typeX = 9 * spriteSize;
+			newTile.typeY = 0 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "10"){
+			//path tile
+			newTile.typeX = 0 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "11"){
+			//path tile
+			newTile.typeX = 1 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "12"){
+			//path tile
+			newTile.typeX = 2 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "13"){
+			//path tile
+			newTile.typeX = 3 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "14"){
+			//path tile
+			newTile.typeX = 4 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "15"){
+			//path tile
+			newTile.typeX = 5 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "16"){
+			//path tile
+			newTile.typeX = 6 * spriteSize;
+			newTile.typeY = 1 * spriteSize;
+			newTile.blocked = false;
+
+		}
+		else if (line == "20"){
+			//path tile
+			newTile.typeX = 0 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "21"){
+			//path tile
+			newTile.typeX = 1 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "22"){
+			//path tile
+			newTile.typeX = 2 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "23"){
+			//path tile
+			newTile.typeX = 3 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+		}
+		else if (line == "24"){
+			//path tile
+			newTile.typeX = 4 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "25"){
+			//path tile
+			newTile.typeX = 5 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "26"){
+			//path tile
+			newTile.typeX = 6 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "27"){
+			//path tile
+			newTile.typeX = 7 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "28"){
+			//path tile
+			newTile.typeX = 8 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "29"){
+			//path tile
+			newTile.typeX = 9 * spriteSize;
+			newTile.typeY = 2 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "30"){
+			//path tile
+			newTile.typeX = 0 * spriteSize;
+			newTile.typeY = 3 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "31"){
+			//path tile
+			newTile.typeX = 1 * spriteSize;
+			newTile.typeY = 3 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		else if (line == "32"){
+			//path tile
+			newTile.typeX = 2 * spriteSize;
+			newTile.typeY = 3 * spriteSize;
+			newTile.blocked = true;
+
+		}
+		//get next line - this will be the zAxis 
+		std::getline(levelFile, line);
+		std::stringstream convert(line);
+		convert >> newTile.worldZ;
+
+		//string to int, then assign it to the current tile
+
+		//std::getline(levelFile, currentLine);
+
+		map[i][j] = newTile;
+		j++;
+		if (j > 14){
+			i++;
+			j = 0;
+		}
+	}
+	levelFile.close();
+
+}
+
+/*
+void World::loadMap(char* path){
+	
 	std::ofstream myfile;
 	myfile.open(path);
 	myfile << "hello file";
 	myfile.close();
-	*/
+	
 	std::string line;
 	std::ifstream myFile(path);
 
@@ -400,6 +659,7 @@ void World::loadMap(char* path){
 			mapTile newTile;
 			newTile.worldX = j;
 			newTile.worldY = i;
+			newTile.worldZ = 0;
 			newTile.screenX = (newTile.worldX - newTile.worldY) * tileSize / 2;
 			newTile.screenY = (newTile.worldX + newTile.worldY) * tileSize / 4;
 			newTile.selected = false;
@@ -659,6 +919,7 @@ void World::loadMap(char* path){
 		std::cout << "Could not open: " << path << std::endl;
 	}
 }
+*/
 
 bool World::isTraversable(int x, int y){
 	if (x >= 0){
@@ -775,10 +1036,10 @@ mapTile World::getTile(int clickX, int clickY, int renderOffsetX, int renderOffs
 			//map[i][j].selected = false;
 
 			int minCollisionX = map[i][j].screenX + (tileSize / 4);
-			int minCollisionY = map[i][j].screenY + ((tileSize / 8) * 3);
+			int minCollisionY = map[i][j].screenY + ((tileSize / 8) * 3) - (map[i][j].worldZ * 16);
 
 			int maxCollisionX = minCollisionX + (tileSize / 2);
-			int maxCollisionY = minCollisionY + (tileSize / 4);
+			int maxCollisionY = minCollisionY + (tileSize / 4) ;
 
 			if (clickX >= minCollisionX + renderOffsetX && clickX < maxCollisionX + renderOffsetX){
 				if (clickY >= minCollisionY + renderOffsetY && clickY < maxCollisionY + renderOffsetY){

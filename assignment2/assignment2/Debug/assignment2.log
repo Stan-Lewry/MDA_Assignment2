@@ -1,13 +1,13 @@
-﻿Build started 14/03/2017 21:33:26.
+﻿Build started 15/03/2017 23:09:14.
      1>Project "F:\Computing with Digital Media\Multimedia Design Applications\localRepo\assignment2\assignment2\assignment2.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Renderer.cpp
          Renderer.cpp
-     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(18): warning C4005: 'screenW' : macro redefinition
-                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(15) : see previous definition of 'screenW'
-     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenH' : macro redefinition
-                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenH'
-     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\renderer.cpp(215): warning C4018: '<' : signed/unsigned mismatch
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(19): warning C4005: 'screenW' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(16) : see previous definition of 'screenW'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(20): warning C4005: 'screenH' : macro redefinition
+                 f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\sdlutils.h(17) : see previous definition of 'screenH'
+     1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\renderer.cpp(236): warning C4018: '<' : signed/unsigned mismatch
      1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\renderer.cpp(376): warning C4305: 'initializing' : truncation from 'double' to 'float'
      1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\renderer.cpp(381): warning C4305: 'initializing' : truncation from 'double' to 'float'
      1>f:\computing with digital media\multimedia design applications\localrepo\assignment2\assignment2\renderer.cpp(386): warning C4305: 'initializing' : truncation from 'double' to 'float'
@@ -25,4 +25,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.93
+Time Elapsed 00:00:01.03

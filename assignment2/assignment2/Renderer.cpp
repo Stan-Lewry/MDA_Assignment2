@@ -18,9 +18,11 @@ void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacte
 	
 	SDL_RenderClear(rend);
 	renderMapBackground();
-	renderWorld(map, currentCharacter);
-	renderCharacters(renderableCharacters1);
-	renderCharacters(renderableCharacters2); 
+	renderWorld(map, currentCharacter, renderableCharacters1, renderableCharacters2);
+	//renderCharacters(renderableCharacters1, map);
+	//renderCharacters(renderableCharacters2, map);
+	renderStatusBars(renderableCharacters1);
+	renderStatusBars(renderableCharacters2);
 	renderUI(renderableUIElements, currentCharacter);
 	renderCursor(mouseX, mouseY);
 	renderAnimationObjects(animationObject);
@@ -43,14 +45,18 @@ void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacte
 	SDL_RenderPresent(rend);
 }
 
-void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter){
+void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter, Character* charList1[teamSize], Character* charList2[teamSize]){
 	SDL_Rect sRect = { 0, 0, worldSpriteSize, worldSpriteSize };
 	SDL_Rect dRect = { 0, 0, 128, 128 };
 	
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
+			
+			int height = map[i][j].worldZ * 16;
+			
 			dRect.x = map[i][j].screenX + renderOffsetX - 32;
 			dRect.y = map[i][j].screenY + renderOffsetY - 32 ;
+			dRect.y -= height;
 			sRect.x = map[i][j].typeX * 2;
 			sRect.y = map[i][j].typeY * 2;
 			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect); 
@@ -90,16 +96,63 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 				sRect.x = 7 * worldSpriteSize;
 				SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 			}
+
+			for (int k = 0; k < teamSize; k++){
+				if (charList1[k]->getWorldX() == j && charList1[k]->getWorldY() == i){
+					SDL_Rect sRect = { charList1[k]->getAnimationFrame() * spriteSize, charList1[k]->getSpriteID() * spriteSize, spriteSize, spriteSize };
+					SDL_Rect dRect = { charList1[k]->getScreenX() + renderOffsetX, charList1[k]->getScreenY() - height + renderOffsetY, tileSize, tileSize };
+					SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+					//	SUBTRACT HEIGHT VALUE FROM CHARACTER Y 
+				}
+				if (charList2[k]->getWorldX() == j && charList2[k]->getWorldY() == i){
+					SDL_Rect sRect = { charList2[k]->getAnimationFrame() * spriteSize, charList2[k]->getSpriteID() * spriteSize, spriteSize, spriteSize };
+					SDL_Rect dRect = { charList2[k]->getScreenX() + renderOffsetX, charList2[k]->getScreenY() - height + renderOffsetY, tileSize, tileSize };
+					SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+					// SAME AS ABOVE
+				}
+			}
+
+			/*
+			for (int k = 0; k < teamSize; k++){
+				//SDL_Rect sRect = { charList1[i]->getAnimationFrame() * spriteSize, charList1[i]->getSpriteID() * spriteSize, spriteSize, spriteSize };
+				SDL_Rect dRect = { charList1[k]->getScreenX() + renderOffsetX, charList1[k]->getScreenY() - height + renderOffsetY, tileSize, tileSize };
+				//SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+				SDL_Rect sRect = { 364, 32, 27, 4 };
+				dRect.x = dRect.x + (tileSize / 2) - 14;
+				dRect.y += 38;
+				dRect.w = (charList1[k]->getCurrentHP() * 27) / charList1[k]->getMaxHP();
+				dRect.h = 4;
+
+				SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
+
+				dRect = { charList2[k]->getScreenX() + renderOffsetX, charList2[k]->getScreenY() - height + renderOffsetY, tileSize, tileSize };
+				//SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+				sRect = { 364, 32, 27, 4 };
+				dRect.x = dRect.x + (tileSize / 2) - 14;
+				dRect.y += 38;
+				dRect.w = (charList2[i]->getCurrentHP() * 27) / charList2[i]->getMaxHP();
+				dRect.h = 4;
+
+				SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
+
+
+			}
+			*/
+
 		}
 	}
 }
 
-void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
+void Renderer::renderStatusBars(Character* renderableCharacters[teamSize]){
 	//std::cout << "render characters called" << std::endl;
 	for (int i = 0; i < teamSize; i++){
 		SDL_Rect sRect = { renderableCharacters[i]->getAnimationFrame() * spriteSize, renderableCharacters[i]->getSpriteID() * spriteSize, spriteSize, spriteSize };
 		SDL_Rect dRect = { renderableCharacters[i]->getScreenX() + renderOffsetX, renderableCharacters[i]->getScreenY() + renderOffsetY, tileSize, tileSize };
-		SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+		//SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
 
 		sRect = { 364, 32, 27, 4 };
 		dRect.x = dRect.x + (tileSize / 2) - 14;
@@ -108,6 +161,8 @@ void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
 		dRect.h = 4;
 
 		SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
+
+
 	}
 }
 
@@ -174,42 +229,8 @@ void Renderer::renderText(const char* text, TTF_Font* font, int x, int y, int r,
 
 
 void Renderer::renderAnimationObjects(AnimationObject* object){
-	/*
-	if (object != NULL && !object->dead){
-			SDL_Rect sRect = { objects[i]->animationFrame * objects[i]->width, 0, objects[i]->width, objects[i]->height };
-			SDL_Rect dRect = { objects[i]->screenX, objects[i]->screenY, objects[i]->width, objects[i]->height };
-			SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
-			objects[i]->animationFrame += 1;
-			if (objects[i]->animationFrame > objects[i]->endFrame){
-				objects[i]->dead = true;
-			}
-		}
-
-	}
-	*/
 
 	
-	/*
-	if (!object->dead){
-
-		object->frameTimer += ftime;
-
-		//printf("Aniamtion called \n");
-		SDL_Rect sRect = { object->animationFrame * object->width, 0, object->width, object->height };
-		SDL_Rect dRect = { object->screenX, object->screenY, object->width, object->height };
-		SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
-		
-		if (object->frameTimer > object->frameSpeed){
-			object->animationFrame += 1;
-			object->frameTimer = 0;
-		}
-		
-		if (object->animationFrame > object->endFrame){
-			//object->dead = true;
-			object->animationFrame = 0;
-		}
-	}
-	*/
 
 	if (animationStack.size() > 0){
 		for (int i = 0; i < animationStack.size(); i++){
@@ -218,11 +239,7 @@ void Renderer::renderAnimationObjects(AnimationObject* object){
 				
 				animationStack.at(i).frameTimer += ftime;
 
-				/*
-				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
-				SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
-				SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
-				*/
+
 
 				renderText(animationStack.at(i).text.c_str(), dmgFont, animationStack.at(i).screenX, animationStack.at(i).screenY, 255, 0, 0);
 
@@ -240,7 +257,7 @@ void Renderer::renderAnimationObjects(AnimationObject* object){
 
 			}
 			else if (animationStack.at(i).animType == SWORD_ATTACK){
-				printf("animate sword\n");
+		
 				animationStack.at(i).frameTimer += ftime;
 
 				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
@@ -253,17 +270,17 @@ void Renderer::renderAnimationObjects(AnimationObject* object){
 				}
 
 				if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
-					//cull object
+			
 					animationStack.erase(animationStack.begin() + i);
 				}
 			}
 			else if (animationStack.at(i).animType == MAGIC_ATTACK){
-				printf("animate magic fire\n");
+			
 				animationStack.at(i).frameTimer += ftime;
 
 				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
 				SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
-				SDL_RenderCopy(rend, swordAnimationSheet, &sRect, &dRect);
+				SDL_RenderCopy(rend, fireAnimationSheet, &sRect, &dRect);
 
 				if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
 					animationStack.at(i).animationFrame += 1;
@@ -271,27 +288,10 @@ void Renderer::renderAnimationObjects(AnimationObject* object){
 				}
 
 				if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
-					//cull object
+		
 					animationStack.erase(animationStack.begin() + i);
 				}
 			}
-			/*
-			animationStack.at(i).frameTimer += ftime;
-
-			SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
-			SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
-			SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
-
-			if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
-				animationStack.at(i).animationFrame += 1;
-				animationStack.at(i).frameTimer = 0;
-			}
-			
-			if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
-				//cull object
-				animationStack.erase(animationStack.begin() + i);
-			}
-			*/
 		}
 	}
 }

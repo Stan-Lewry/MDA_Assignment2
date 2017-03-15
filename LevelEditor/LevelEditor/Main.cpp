@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <string>
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
@@ -17,6 +18,7 @@ SDL_Renderer* rend;
 SDL_Texture* tiles;
 SDL_Texture* ui;
 SDL_Event evnt;
+TTF_Font* font = NULL; 
 
 int renderOffsetX = 0; 
 int renderOffsetY = 0;
@@ -31,6 +33,7 @@ bool gRunning = false;
 struct tile{
 	int worldX;
 	int worldY;
+	int worldZ;
 	int screenX;
 	int screenY;
 	int type;
@@ -60,7 +63,8 @@ bool initSDL(){
 	SDL_Init(SDL_INIT_EVERYTHING);
 	TTF_Init();
 	IMG_Init(IMG_INIT_PNG);
-	window = SDL_CreateWindow("Level Editor", 100, 100, screenW, screenH, SDL_WINDOW_BORDERLESS);
+	font = TTF_OpenFont("Fonts/font.ttf", 22);
+	window = SDL_CreateWindow("Level Editor", 100, 100, screenW, screenH, SDL_WINDOW_SHOWN);
 	if (window != NULL){
 		printf("Window Initialized\n");
 		rend = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
@@ -75,6 +79,8 @@ bool initSDL(){
 	else{
 		return false;
 	}
+
+	
 }
 
 SDL_Texture* loadPNG(char* path){
@@ -94,7 +100,7 @@ void initTextures(){
 void initMap(){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
-			tile newTile = { j, i, j * tileSize, i * tileSize, 1 };
+			tile newTile = { j, i, 0, j * tileSize, i * tileSize, 1 };
 			map[i][j] = newTile;
 		}
 	}
@@ -268,6 +274,17 @@ void renderSelectedTile(){
 	}
 }
 
+void renderZVaues(const char* num, int worldX, int worldY){
+	SDL_Rect dest = { (worldX * tileSize) + renderOffsetX, (worldY * tileSize) + renderOffsetY, 0, 0 };
+	TTF_SizeText(font, num, &dest.w, &dest.h);
+	SDL_Color col = { 255, 0, 0 };
+	SDL_Surface* tempSurf = TTF_RenderText_Solid(font, num, col);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tempSurf);
+	SDL_RenderCopy(rend, texture, NULL, &dest);
+	SDL_FreeSurface(tempSurf);
+	SDL_DestroyTexture(texture);
+}
+
 void renderMap(){
 	SDL_Rect bg = { 0, 0, screenW, screenH };
 	SDL_SetRenderDrawColor(rend, 102, 204, 255, 1);
@@ -406,6 +423,9 @@ void renderMap(){
 			dRect.x = map[i][j].screenX + renderOffsetX;
 			dRect.y = map[i][j].screenY + renderOffsetY;
 			SDL_RenderCopy(rend, tiles, &sRect, &dRect);
+
+			
+			renderZVaues(std::to_string(map[i][j].worldZ).c_str(), map[i][j].worldX, map[i][j].worldY); 
 		}
 	}
 
@@ -430,6 +450,8 @@ void renderAll(){
 	SDL_RenderPresent(rend);
 }
 
+
+
 void selectTile(int inputX, int inputY){
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
@@ -442,15 +464,31 @@ void selectTile(int inputX, int inputY){
 	}
 }
 
+void cycleTileZValue(int inputX, int inputY){
+	for (int i = 0; i < mapH; i++){
+		for (int j = 0; j < mapW; j++){
+			if (inputX >= map[i][j].screenX + renderOffsetX && inputX < map[i][j].screenX + tileSize + renderOffsetX){
+				if (inputY >= map[i][j].screenY + renderOffsetY && inputY < map[i][j].screenY + tileSize + renderOffsetY){
+					if (map[i][j].worldZ < 15){
+						map[i][j].worldZ++;
+					}
+					else map[i][j].worldZ = 0;
+				}
+			}
+		}
+	}
+}
+
 void exportMap(){
 	std::ofstream levelFile;
-	levelFile.open("newLevel06.level");
+	levelFile.open("newLevel07.level");
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
 			levelFile << map[i][j].type << "\n";
+			levelFile << map[i][j].worldZ << "\n";
 		}
-		levelFile << "\n";
+		//levelFile << "\n";
 	}
 	levelFile.close();
 }
@@ -505,10 +543,15 @@ void handleInputs(){
 		case SDL_MOUSEBUTTONDOWN:
 			int mouseX, mouseY;
 			SDL_GetMouseState(&mouseX, &mouseY);
-			if (!selectPaletteButton(mouseX, mouseY)){
-				if (!selectOptionsButton(mouseX, mouseY)){
-					selectTile(mouseX, mouseY);
+			if (evnt.button.button == SDL_BUTTON_LEFT){
+				if (!selectPaletteButton(mouseX, mouseY)){
+					if (!selectOptionsButton(mouseX, mouseY)){
+						selectTile(mouseX, mouseY);
+					}
 				}
+			}
+			if (evnt.button.button == SDL_BUTTON_RIGHT){
+				cycleTileZValue(mouseX, mouseY);
 			}
 			//selectTile(mouseX, mouseY);
 			break;
