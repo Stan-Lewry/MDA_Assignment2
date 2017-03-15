@@ -7,13 +7,14 @@ Game::Game(){
 	world = new World();
 	//world->initBlankMap();
 	//world->initMap();
-	world->loadMap("Levels/newLevel04.level");
+	world->loadMap("Levels/newLevel06.level");
 	renderer = new Renderer(sdlUtils->rend);
 	ui = new UI();
 	ui->initMainMenuElements();
 	initCharacters();
 	selectedFriendlyCharacter = NULL;
 	selectedTargetCharacter = NULL;
+	testAnimation = new AnimationObject{ 0, 0, 32, 32, 0, 3, DMG_NO, true, 0.1, 0 };
 }
 
 
@@ -67,19 +68,33 @@ bool Game::selectTargetCharacter(int mouseX, int mouseY){
 }
 
 void Game::doCombat(Character* friendly, Character* target){
+	world->clearAll();
 	//printf("DID SOME COMBAT\n");
 	//printf(target->getName());
 	//printf("\n");
 	
-	int dmg = 1000000;
+	//int dmg = 1000000;
 
-	printf(friendly->getName());
-	printf(" did damage to ");
-	printf(target->getName());
-	printf("\n");
+	//printf(friendly->getName());
+	//printf(" did damage to ");
+	//printf(target->getName());
+	//printf("\n");
 
+	int dmg = friendly->attack();
 	target->doDamage(dmg);
-	friendly->setAttkPoints(-1);
+
+	//std::string dmgStr = std::to_string(dmg);
+
+	if (friendly->getProfession() == "wizard"){
+		renderer->addAnimationObject(target->getScreenX() + renderer->getRenderOffsetX() + 8, target->getScreenY() + renderer->getRanderOffsetY() + 8, MAGIC_ATTACK, "");
+	}
+	else{
+		renderer->addAnimationObject(target->getScreenX() + renderer->getRenderOffsetX() + 8, target->getScreenY() + renderer->getRanderOffsetY() + 8, SWORD_ATTACK, "");
+	}
+	renderer->addAnimationObject(target->getScreenX() + renderer->getRenderOffsetX() + 20, target->getScreenY() + renderer->getRanderOffsetY(), DMG_NO, std::to_string(dmg));
+	
+
+	//friendly->setAttkPoints(-1);
 }
 
 void Game::getRanges(Character* c){
@@ -117,52 +132,7 @@ void Game::update(InputState inputState){
 	}
 
 	if (currentState == GAMEPLAY){
-		
-		/*
-		if (inputState.mouseButtonDown){
-			mapTile selectedTile = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(),renderer->getRanderOffsetY() );
-				
-			if (selectedFriendlyCharacter == NULL){
-				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
-					world->clearAll();
-					getRanges(selectedFriendlyCharacter);
-				}
-				else{
-					world->clearAll();
-					world->selectTile(selectedTile.worldX, selectedTile.worldY);
-				}
-			}
-			else if (selectedFriendlyCharacter != NULL){
-				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
-					world->clearAll();
-					getRanges(selectedFriendlyCharacter);
-				}
-				else if (selectedTile.moveRange){
-					world->clearAll();
-					if (selectedFriendlyCharacter->getMovePoints() > 0){
-						selectedFriendlyCharacter->moveTo(selectedTile.worldX, selectedTile.worldY);
-						if (selectedFriendlyCharacter->getMovePoints() > 0){
-							getRanges(selectedFriendlyCharacter);
-						}
-						
-					}
-
-					//getRanges(selectedCharacter);
-				}
-				else{
-					world->clearAll();
-					world->selectTile(selectedTile.worldX, selectedTile.worldY);
-				}
-			}
-			
-
-
-
-
-		
-		}
-	*/
-		
+	
 		if (selectedFriendlyCharacter == NULL){
 			if (inputState.mouseButtonDown){
 				if (selectFriendlyCharacter(inputState.mouseX, inputState.mouseY)){
@@ -187,15 +157,13 @@ void Game::update(InputState inputState){
 				}
 				if (selectTargetCharacter(inputState.mouseX, inputState.mouseY)){
 					if (selectedFriendlyCharacter->getAttkPoints() > 0){
-						//mapTile enemyPosition = world->getTile(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY(), renderer->getRenderOffsetX(), renderer->getRanderOffsetY());
-						//mapTile enemyPosition = world->getTile(inputState.mouseX, inputState.mouseY, renderer->getRenderOffsetX(), renderer->getRanderOffsetY());
-						mapTile enemyPosition = world->getTileWorldCoords(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY());
-						if (enemyPosition.attackRange == true){
-							doCombat(selectedFriendlyCharacter, selectedTargetCharacter);
+						if (selectedTargetCharacter->isDead() != true){
+							mapTile enemyPosition = world->getTileWorldCoords(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY());
+							if (enemyPosition.attackRange == true){
+								doCombat(selectedFriendlyCharacter, selectedTargetCharacter);
+							}
 						}
-						//if (world->getTile(selectedTargetCharacter->getWorldX(), selectedTargetCharacter->getWorldY(), renderer->getRenderOffsetX(), renderer->getRanderOffsetY()).attackRange == true){
-						//	doCombat(selectedFriendlyCharacter, selectedTargetCharacter);
-						//}
+
 					}
 				}
 
@@ -230,6 +198,12 @@ void Game::update(InputState inputState){
 
 
 		if (inputState.space){
+			//endTurn();
+			//testAnimation->dead = false;
+			//testAnimation->animationFrame = 0;	
+			//testAnimation->screenX = 300;
+			//testAnimation->screenY = 300;
+			//renderer->addAnimationObject(380, 400, SWORD_ATTACK, "");
 			endTurn();
 		}
 
@@ -254,6 +228,7 @@ void Game::update(InputState inputState){
 				inactiveCharacterList[i]->setIdle(true);
 			}
 		}
+
 	}
 	else if (currentState == MAINMENU){
 
@@ -293,7 +268,7 @@ void Game::gameLoop(){
 
 
 	while (globalRunning){
-
+		/*
 		oldTime = currentTime;
 		currentTime = SDL_GetTicks();
 		ftime = (currentTime - oldTime) / 1000.0f;
@@ -305,13 +280,13 @@ void Game::gameLoop(){
 			frames = 0;
 			timer = 0;
 		}
-
+		*/
 
 		input->handleEvents();
 		update(input->getCurrentInputState()); 
 		//renderMap();
 		if (currentState == GAMEPLAY){
-			renderer->renderGame(world->map, activeCharacterList, inactiveCharacterList, selectedFriendlyCharacter, ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
+			renderer->renderGame(world->map, activeCharacterList, inactiveCharacterList, selectedFriendlyCharacter, ui->getElementList(),testAnimation, input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);
 		}
 		else if (currentState == MAINMENU){
 			renderer->renderMainMenu(ui->getElementList(), input->getCurrentInputState().mouseX, input->getCurrentInputState().mouseY);

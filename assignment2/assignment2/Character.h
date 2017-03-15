@@ -18,13 +18,19 @@ public:
 	void setScreenY(int _screenY);
 	int getMoveRange();
 	int getAttkRange();
-	int getHP();
+	int getCurrentHP();
+	int getMaxHP();
 	char* getName();
 	int getSpriteID();
 	int getMovePoints();
 	void setMovePoints(int p);
 	int getAttkPoints();
 	void setAttkPoints(int p);
+	char* getProfession();
+	int getAttk();
+	int getArmour();
+
+
 
 	int getAnimationFrame();
 	void setAnimationFrame(int frame);
@@ -35,6 +41,8 @@ public:
 	void reset();
 
 	void moveTo(int _worldX, int _worldY);
+	int attack();
+
 
 	bool clickedOn(int x, int y, int renderOffsetX, int renderOffsetY);
 
@@ -60,6 +68,10 @@ private:
 	Profession profession;
 
 	int hp;
+	int maxHp;
+
+
+
 
 	int movePoints;
 	int maxMovePoints;

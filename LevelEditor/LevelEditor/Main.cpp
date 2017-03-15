@@ -444,7 +444,7 @@ void selectTile(int inputX, int inputY){
 
 void exportMap(){
 	std::ofstream levelFile;
-	levelFile.open("newLevel05.level");
+	levelFile.open("newLevel06.level");
 
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){

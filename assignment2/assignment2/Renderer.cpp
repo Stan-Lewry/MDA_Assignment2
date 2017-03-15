@@ -2,12 +2,20 @@
 
 Renderer::Renderer(SDL_Renderer* _rend){
 	rend = _rend;
-	//worldSpriteSheet = _worldSpriteSheet;
-	//worldSpriteSheet = loadPNG("Assets/tiles01.png");
 	initTextures();
+	initFonts();
 }
 
-void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter, UIElement renderableUIElements[1], int mouseX, int mouseY){
+void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], Character* renderableCharacters2[teamSize], Character* currentCharacter, UIElement renderableUIElements[1], AnimationObject* animationObject, int mouseX, int mouseY){
+	
+	oldTime = currentTime;
+	currentTime = SDL_GetTicks();
+	ftime = (currentTime - oldTime) / 1000.0f;
+
+	frames++;
+	timer += ftime;
+
+	
 	SDL_RenderClear(rend);
 	renderMapBackground();
 	renderWorld(map, currentCharacter);
@@ -15,45 +23,62 @@ void Renderer::renderGame(mapTile map[mapH][mapW], Character* renderableCharacte
 	renderCharacters(renderableCharacters2); 
 	renderUI(renderableUIElements, currentCharacter);
 	renderCursor(mouseX, mouseY);
+	renderAnimationObjects(animationObject);
+	//renderText("CUM", font, 600, 600, 255, 0, 0);
+
+	if (timer > 1){
+
+		//std::stringstream sStream;
+		//stream << frames;
+		//printf("frame > 1\n");
+		//std::string fString = std::to_string(frames);
+		//const char* fChar = fString.c_str();
+		//printf(fChar);
+		//renderText("CUM", font, 600, 600, 255, 0, 0);
+		printf("%iFPS\n", frames);
+		frames = 0;
+		timer = 0;
+	}
+
 	SDL_RenderPresent(rend);
 }
 
 void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter){
-	SDL_Rect sRect = { 0, 0, spriteSize, spriteSize };
-	SDL_Rect dRect = { 0, 0, tileSize, tileSize };
+	SDL_Rect sRect = { 0, 0, worldSpriteSize, worldSpriteSize };
+	SDL_Rect dRect = { 0, 0, 128, 128 };
 	
 	for (int i = 0; i < mapH; i++){
 		for (int j = 0; j < mapW; j++){
-			dRect.x = map[i][j].screenX + renderOffsetX;
-			dRect.y = map[i][j].screenY + renderOffsetY;
-			sRect.x = map[i][j].typeX;
-			sRect.y = map[i][j].typeY;
+			dRect.x = map[i][j].screenX + renderOffsetX - 32;
+			dRect.y = map[i][j].screenY + renderOffsetY - 32 ;
+			sRect.x = map[i][j].typeX * 2;
+			sRect.y = map[i][j].typeY * 2;
 			SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect); 
 
 			if (currentCharacter != NULL){
 				if (currentCharacter->getAttkRange() > currentCharacter->getMoveRange()){
 					if (map[i][j].moveRange){
 
-						sRect.y = 1 * spriteSize;
-						sRect.x = 9 * spriteSize;
+						sRect.y = 1 * worldSpriteSize;
+						sRect.x = 9 * worldSpriteSize;
 						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 					}
 					else if (map[i][j].attackRange){
 	
-						sRect.y = 1 * spriteSize;
-						sRect.x = 8 * spriteSize;
+						sRect.y = 1 * worldSpriteSize;
+						sRect.x = 8 * worldSpriteSize;
 						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 					}
 				}
 				else if (currentCharacter->getAttkRange() < currentCharacter->getMoveRange()){
 					if (map[i][j].moveRange){
-						sRect.y = 1 * spriteSize;
-						sRect.x = 9 * spriteSize;
+						sRect.y = 1 * worldSpriteSize;
+						sRect.x = 9 * worldSpriteSize;
 						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 					}
 					if (map[i][j].attackRange){
-						sRect.y = 1 * spriteSize;
-						sRect.x = 8 * spriteSize;
+						sRect.y = 1 * worldSpriteSize;
+						sRect.x = 8 * worldSpriteSize;
 						SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 					}
 				}
@@ -61,8 +86,8 @@ void Renderer::renderWorld(mapTile map[mapH][mapW], Character* currentCharacter)
 
 
 			if (map[i][j].selected){
-				sRect.y = 1 * spriteSize;
-				sRect.x = 7 * spriteSize;
+				sRect.y = 1 * worldSpriteSize;
+				sRect.x = 7 * worldSpriteSize;
 				SDL_RenderCopy(rend, worldSpriteSheet, &sRect, &dRect);
 			}
 		}
@@ -75,10 +100,24 @@ void Renderer::renderCharacters(Character* renderableCharacters[teamSize]){
 		SDL_Rect sRect = { renderableCharacters[i]->getAnimationFrame() * spriteSize, renderableCharacters[i]->getSpriteID() * spriteSize, spriteSize, spriteSize };
 		SDL_Rect dRect = { renderableCharacters[i]->getScreenX() + renderOffsetX, renderableCharacters[i]->getScreenY() + renderOffsetY, tileSize, tileSize };
 		SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+		sRect = { 364, 32, 27, 4 };
+		dRect.x = dRect.x + (tileSize / 2) - 14;
+		dRect.y += 38;
+		dRect.w = (renderableCharacters[i]->getCurrentHP() * 27) / renderableCharacters[i]->getMaxHP();
+		dRect.h = 4;
+
+		SDL_RenderCopy(rend, uiSpriteSheet, &sRect, &dRect);
 	}
 }
 
 void Renderer::renderUI(UIElement renderableUIElements[1], Character* currentCharacter){
+
+	//SDL_Rect fpsCounterDest = { 0, 0, 0, 0 };
+	//char* text = "TEST TEXT";
+	//TTF_SizeText(font, text, &fpsCounterDest.w, &fpsCounterDest.h);
+	//renderText
+
 	SDL_Rect sRect;
 	SDL_Rect dRect;
 	for (int i = 0; i < 7; i++){
@@ -91,6 +130,18 @@ void Renderer::renderUI(UIElement renderableUIElements[1], Character* currentCha
 		sRect = { 2 * spriteSize, currentCharacter->getSpriteID() * spriteSize, spriteSize, spriteSize };
 		dRect = { 75, 70, 150, 150 };
 		SDL_RenderCopy(rend, characterSpriteSheet, &sRect, &dRect);
+
+		renderText(currentCharacter->getProfession(), font, 86, 220 - 8, 0, 0, 0);
+
+		renderText(std::to_string(currentCharacter->getCurrentHP()).append("/").append(std::to_string(currentCharacter->getMaxHP())).c_str(), font, 86, 284 - 8, 0, 0, 0);
+
+		renderText(std::to_string(currentCharacter->getAttk()).c_str(), font, 86, 348 - 8, 0, 0, 0);
+
+		renderText(std::to_string(currentCharacter->getArmour()).c_str(), font, 86, 412 - 8, 0, 0, 0);
+
+		renderText(std::to_string(currentCharacter->getMovePoints()).c_str(), font, 86, 476 - 8, 0, 0, 0);
+
+		renderText(std::to_string(currentCharacter->getAttkPoints()).c_str(), font, 86, 540 - 8, 0, 0, 0);
 	}
 
 }
@@ -110,6 +161,140 @@ void Renderer::renderCursor(int mouseX, int mouseY){
 
 }
 
+void Renderer::renderText(const char* text, TTF_Font* font, int x, int y, int r, int g, int b){
+	SDL_Rect dest = { x, y, 0, 0 };
+	TTF_SizeText(font, text, &dest.w, &dest.h);	
+	SDL_Color col = { r, g, b };
+	SDL_Surface* tempSurf = TTF_RenderText_Solid(font, text, col);
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(rend, tempSurf);
+	SDL_FreeSurface(tempSurf);
+	SDL_RenderCopy(rend, texture, NULL, &dest);
+	SDL_DestroyTexture(texture);
+}
+
+
+void Renderer::renderAnimationObjects(AnimationObject* object){
+	/*
+	if (object != NULL && !object->dead){
+			SDL_Rect sRect = { objects[i]->animationFrame * objects[i]->width, 0, objects[i]->width, objects[i]->height };
+			SDL_Rect dRect = { objects[i]->screenX, objects[i]->screenY, objects[i]->width, objects[i]->height };
+			SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
+			objects[i]->animationFrame += 1;
+			if (objects[i]->animationFrame > objects[i]->endFrame){
+				objects[i]->dead = true;
+			}
+		}
+
+	}
+	*/
+
+	
+	/*
+	if (!object->dead){
+
+		object->frameTimer += ftime;
+
+		//printf("Aniamtion called \n");
+		SDL_Rect sRect = { object->animationFrame * object->width, 0, object->width, object->height };
+		SDL_Rect dRect = { object->screenX, object->screenY, object->width, object->height };
+		SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
+		
+		if (object->frameTimer > object->frameSpeed){
+			object->animationFrame += 1;
+			object->frameTimer = 0;
+		}
+		
+		if (object->animationFrame > object->endFrame){
+			//object->dead = true;
+			object->animationFrame = 0;
+		}
+	}
+	*/
+
+	if (animationStack.size() > 0){
+		for (int i = 0; i < animationStack.size(); i++){
+
+			if (animationStack.at(i).animType == DMG_NO){
+				
+				animationStack.at(i).frameTimer += ftime;
+
+				/*
+				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
+				*/
+
+				renderText(animationStack.at(i).text.c_str(), dmgFont, animationStack.at(i).screenX, animationStack.at(i).screenY, 255, 0, 0);
+
+				if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
+					animationStack.at(i).screenY -= 1;
+					animationStack.at(i).animationFrame += 1;
+					animationStack.at(i).frameTimer = 0;
+					
+				}
+				if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
+					animationStack.erase(animationStack.begin() + i);
+				}
+				
+
+
+			}
+			else if (animationStack.at(i).animType == SWORD_ATTACK){
+				printf("animate sword\n");
+				animationStack.at(i).frameTimer += ftime;
+
+				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_RenderCopy(rend, swordAnimationSheet, &sRect, &dRect);
+
+				if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
+					animationStack.at(i).animationFrame += 1;
+					animationStack.at(i).frameTimer = 0;
+				}
+
+				if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
+					//cull object
+					animationStack.erase(animationStack.begin() + i);
+				}
+			}
+			else if (animationStack.at(i).animType == MAGIC_ATTACK){
+				printf("animate magic fire\n");
+				animationStack.at(i).frameTimer += ftime;
+
+				SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
+				SDL_RenderCopy(rend, swordAnimationSheet, &sRect, &dRect);
+
+				if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
+					animationStack.at(i).animationFrame += 1;
+					animationStack.at(i).frameTimer = 0;
+				}
+
+				if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
+					//cull object
+					animationStack.erase(animationStack.begin() + i);
+				}
+			}
+			/*
+			animationStack.at(i).frameTimer += ftime;
+
+			SDL_Rect sRect = { animationStack.at(i).animationFrame * animationStack.at(i).width, 0, animationStack.at(i).width, animationStack.at(i).height };
+			SDL_Rect dRect = { animationStack.at(i).screenX, animationStack.at(i).screenY, animationStack.at(i).width, animationStack.at(i).height };
+			SDL_RenderCopy(rend, animationSheet, &sRect, &dRect);
+
+			if (animationStack.at(i).frameTimer > animationStack.at(i).frameSpeed){
+				animationStack.at(i).animationFrame += 1;
+				animationStack.at(i).frameTimer = 0;
+			}
+			
+			if (animationStack.at(i).animationFrame > animationStack.at(i).endFrame){
+				//cull object
+				animationStack.erase(animationStack.begin() + i);
+			}
+			*/
+		}
+	}
+}
 
 void Renderer::renderMainMenu(UIElement renderableUIElements[4], int mouseX, int mouseY){
 	
@@ -146,12 +331,22 @@ SDL_Texture* Renderer::loadPNG(char path[]){
 	return texture;
 }
 
+
+
 void Renderer::initTextures(){
-	worldSpriteSheet = loadPNG("Assets/iso_tiles.png");
+	worldSpriteSheet = loadPNG("Assets/iso_tiles_large.png");
 	characterSpriteSheet = loadPNG("Assets/characters_large.png");
 	uiSpriteSheet = loadPNG("Assets/ui.png");
 	titleScreen = loadPNG("Assets/title_screen.png");
 	mainMenuButtons = loadPNG("Assets/main_menu_buttons.png");
+	swordAnimationSheet = loadPNG("Assets/sword_anim.png");
+	fireAnimationSheet = loadPNG("Assets/fire_anim.png");
+}
+
+
+void Renderer::initFonts(){
+	font = TTF_OpenFont("Fonts/font.ttf", 30);
+	dmgFont = TTF_OpenFont("Fonts/font.ttf", 18);
 }
 
 int Renderer::getRenderOffsetX(){
@@ -172,4 +367,25 @@ void Renderer::addOffsetY(int a){
 
 int Renderer::getMapSpaceOffset(){
 	return mapSpaceOffset;
+}
+
+
+void Renderer::addAnimationObject(int screenX, int screenY, AnimationType animType, std::string text){
+
+	if (animType == DMG_NO){
+		AnimationObject newAnimObj = { screenX, screenY, 32, 32, 0, 20, animType,false,  0.05, 0, text };
+		animationStack.push_back(newAnimObj);
+
+	}
+	else if (animType == SWORD_ATTACK){
+		AnimationObject newAnimObj = { screenX, screenY, 32, 32, 0, 8, animType, false, 0.05, 0, text };
+		animationStack.push_back(newAnimObj);
+	}
+
+	else if (animType == MAGIC_ATTACK){
+		AnimationObject newAnimObj = { screenX, screenY, 32, 32, 0, 8, animType, false, 0.05, 0, text };
+		animationStack.push_back(newAnimObj);
+	}
+
+	
 }

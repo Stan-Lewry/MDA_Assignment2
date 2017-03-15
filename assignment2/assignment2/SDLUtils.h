@@ -54,8 +54,17 @@ struct mapTile{
 
 enum UIAction{NO_ACTION, A, B, C , CHANGESTATE_GAMEPLAY, QUIT};
 enum GameState{MAINMENU, LEVELSELECT, GAMEPLAY};
+enum AnimationType{DMG_NO, SWORD_ATTACK, MAGIC_ATTACK};
 
-
+struct AnimationObject{
+	int screenX, screenY, width, height, animationFrame, endFrame;
+	AnimationType animType;
+	bool dead;
+	float frameSpeed;
+	float frameTimer;
+	//const char* text;
+	std::string text;
+};
 
 struct UIElement{
 	int screenX;

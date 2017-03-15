@@ -7,27 +7,31 @@
 #include "Character.h"
 
 
+
+
 class Renderer{
 public:
 	Renderer(SDL_Renderer* _rend);
 	void renderGame(mapTile map[mapH][mapW], Character* renderableCharacters1[teamSize], 
 		Character* renderableCharacters2[teamSize], Character* currentCharacter, 
-		UIElement renderableUIElements[1], int mousex, int mouseY);
+		UIElement renderableUIElements[1], AnimationObject* animationObject, int mousex, int mouseY);
 
 	void renderCharacters(Character* renderableCharacters[teamSize]);
 	void renderUI(UIElement renderableUIElements[1], Character* currentCharacter);
 	void renderWorld(mapTile map[mapH][mapW], Character* currentCharacter);
 	void renderMapBackground();
 	void renderCursor(int mouseX, int mouseY);
-
+	void renderText(const char* text, TTF_Font* font, int x, int y, int r, int g, int b);
+	void renderAnimationObjects(AnimationObject* object);
 
 	void renderMainMenu(UIElement renderableUIElements[1], int mouseX, int mouseY);
 
 	void initTextures();
+	void initFonts();
 	SDL_Texture* loadPNG(char path[]);
 
 	
-
+	void addAnimationObject(int screenX, int screenY, AnimationType animType, std::string text);
 
 	int getRenderOffsetX();
 	int getRanderOffsetY();
@@ -44,13 +48,29 @@ private:
 	SDL_Texture* uiSpriteSheet;
 	SDL_Texture* titleScreen;
 	SDL_Texture* mainMenuButtons;
+	SDL_Texture* swordAnimationSheet;
+	SDL_Texture* fireAnimationSheet;
+
+
+	TTF_Font* font = NULL;
+	TTF_Font* dmgFont = NULL;
+
 	int spriteSize = 64;
+	int worldSpriteSize = 128;
 	int tileSize = 64;
 	int renderOffsetX = 760;
 	int renderOffsetY = 100;
 
 
 	int mapSpaceOffset = 200;
+
+	Uint32 oldTime;
+	Uint32 currentTime;
+	float ftime;
+	float timer;
+	int frames;
+
+	std::vector<AnimationObject> animationStack;
 };
 
 #endif

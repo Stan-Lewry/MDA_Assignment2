@@ -48,6 +48,10 @@ private:
 	Character* selectedFriendlyCharacter;
 	Character* selectedTargetCharacter;
 
+	//AnimationObject* animationObjects[5]; 
+
+	AnimationObject* testAnimation;
+
 	bool globalRunning;
 	
 

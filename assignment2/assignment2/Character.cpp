@@ -15,7 +15,8 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 	
 	switch (profession){
 	case KNIGHT:
-		hp = 100;
+		maxHp = 100;
+		hp = maxHp;
 		movePoints = 1;
 		maxMovePoints = 1;
 		attkPoints = 1;
@@ -27,7 +28,8 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 		attk = 15;
 		break;
 	case WIZARD:
-		hp = 70;
+		maxHp = 70;
+		hp = maxHp;
 		movePoints = 1;
 		maxMovePoints = 1;
 		attkPoints = 2;
@@ -39,7 +41,8 @@ Character::Character(int _worldX, int _worldY, int _screenX, int _screenY, int _
 		attk = 15;
 		break;
 	case FIGHTER:
-		hp = 50;
+		maxHp = 50;
+		hp = maxHp;
 		movePoints = 2;
 		maxMovePoints = 2;
 		attkPoints = 1;
@@ -85,8 +88,11 @@ int Character::getMoveRange(){
 int Character::getAttkRange(){
 	return attkRange;
 }
-int Character::getHP(){
+int Character::getCurrentHP(){
 	return hp;
+}
+int Character::getMaxHP(){
+	return maxHp;
 }
 char* Character::getName(){
 	return name;
@@ -119,6 +125,24 @@ int Character::getAnimationFrame(){
 void Character::setAnimationFrame(int frame){
 	animationFrame = frame;
 }
+
+int Character::getAttk(){
+	return attk;
+}
+
+int Character::getArmour(){
+	return armour;
+}
+
+char* Character::getProfession(){
+	switch (profession){
+	case KNIGHT: return "knight"; break;
+	case WIZARD: return "wizard"; break;
+	case FIGHTER: return "fighter"; break;
+	default: break;
+	}
+}
+
 
 bool Character::isIdle(){
 	return idle;
@@ -178,6 +202,11 @@ void Character::moveTo(int _worldX, int _worldY){
 	screenY = (worldX + worldY) * 64 / 4;
 	movePoints -= 1;
 	//attkPoints -= 1; //TEMPORARY _ FOR TESTING PURPOSES ONLY
+}
+
+int Character::attack(){
+	attkPoints -= 1;
+	return attk;
 }
 
 void Character::doDamage(int dmg){
