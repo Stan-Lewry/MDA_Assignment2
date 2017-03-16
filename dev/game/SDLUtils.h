@@ -1,9 +1,9 @@
 #ifndef SDLUTILS_HEADER
 #define SDLUTILS_HEADER
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <SDL_ttf.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -80,6 +80,14 @@ struct UIElement{
 	UIAction action;
 };
 
+/*
+template <typename T>
+std::string to_string(T value){
+	std::ostringstream os;
+	os << value;
+	return os.str();
+}
+*/
 class SDLUtils{
 public: 
 	SDL_Window* window;
